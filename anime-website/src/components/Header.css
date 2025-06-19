@@ -1,0 +1,100 @@
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 20px; /* Reduced padding for slim header */
+  background-color: #1A1A1A; /* From existing dark theme */
+  border-bottom: 1px solid #424242; /* From existing dark theme */
+  color: #E0E0E0; /* From existing dark theme */
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #800020; /* Wine-red accent for logo */
+  margin-right: 20px;
+}
+
+.logo-icon {
+  font-size: 1.5em; /* Slightly larger for logo */
+  margin-right: 8px;
+}
+
+.logo-text {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.main-nav a {
+  color: #E0E0E0;
+  text-decoration: none;
+  margin-right: 15px;
+  font-size: 0.9em;
+}
+
+.main-nav a:hover, .main-nav a:focus {
+  color: #C04040; /* Lighter wine-red for hover, from theme */
+  text-decoration: underline;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.search-bar input[type="text"] {
+  padding: 6px 10px;
+  font-size: 0.85em;
+  border: 1px solid #424242; /* Card border color */
+  border-radius: 4px 0 0 4px; /* Rounded left corners */
+  background-color: #2C2C2C; /* Slightly lighter than card bg for input */
+  color: #E0E0E0;
+  width: 180px; /* Adjust as needed */
+  outline: none;
+}
+
+.search-bar input[type="text"]::placeholder {
+  color: #AAAAAA;
+}
+
+.search-bar input[type="text"]:focus {
+  border-color: #800020; /* Wine-red accent */
+}
+
+.search-bar button {
+  padding: 6px 10px;
+  border: 1px solid #424242;
+  border-left: none;
+  background-color: #800020; /* Wine-red accent */
+  color: #E0E0E0;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0; /* Rounded right corners */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-bar button:hover {
+  background-color: #9A0027; /* Brighter wine-red from theme */
+}
+
+.search-bar button svg {
+  font-size: 0.9em;
+}
+
+.user-icon {
+  font-size: 1.6em; /* User icon size */
+  color: #E0E0E0;
+  cursor: pointer;
+}
+
+.user-icon:hover {
+  color: #C04040; /* Lighter wine-red for hover */
+}

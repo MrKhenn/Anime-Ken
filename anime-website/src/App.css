@@ -18,28 +18,6 @@ main {
   min-height: 80vh; /* Ensure footer is pushed down */
 }
 
-header {
-  background-color: #1A1A1A;
-  padding: 20px;
-  color: #E0E0E0;
-  border-bottom: 1px solid #424242;
-}
-
-header h1 {
-  color: #800020; /* Wine-red for the main title */
-}
-
-header nav a {
-  margin: 0 10px;
-  color: #C04040;
-  text-decoration: none;
-}
-
-header nav a:hover, header nav a:focus {
-  color: #D35454;
-  text-decoration: underline;
-}
-
 footer {
   background-color: #1A1A1A;
   padding: 10px;
