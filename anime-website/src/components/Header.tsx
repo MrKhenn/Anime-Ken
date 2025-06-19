@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaUserCircle, FaFilm } from 'react-icons/fa'; // Using FaFilm as a generic logo
-import './Header.css'; // We will create this CSS file in the next step
+import { FaSearch, FaUserCircle, FaFilm } from 'react-icons/fa';
+import './Header.css';
 
 const Header: React.FC = () => {
   return (
@@ -13,7 +13,8 @@ const Header: React.FC = () => {
         </Link>
         <nav className="main-nav">
           <Link to="/">Home</Link>
-          {/* Add more links here if needed, e.g., <Link to="/browse">Browse</Link> */}
+          <Link to="/premieres">Estrenos</Link>
+          <Link to="/about">Acerca de</Link>
         </nav>
       </div>
       <div className="header-right">
