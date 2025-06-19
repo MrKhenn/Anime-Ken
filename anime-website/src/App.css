@@ -111,3 +111,25 @@ p.loading-message, p.error-message {
   padding: 20px;
   color: #800020;
 }
+
+/* Styling for the new details button on AnimeCard */
+.anime-card .details-button {
+  background-color: #800020; /* Use theme accent or default */
+  color: #E0E0E0; /* Use theme text or default */
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.9em;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none; /* In case it was an <a> styled as button */
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.anime-card .details-button:hover {
+  background-color: #9A0027; /* Use theme accent hover or default */
+  text-decoration: none;
+}
