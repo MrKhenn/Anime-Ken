@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaUserCircle, FaPlayCircle } from 'react-icons/fa';
+import { FaSearch as FaSearchOrig, FaUserCircle as FaUserCircleOrig, FaPlayCircle as FaPlayCircleOrig } from 'react-icons/fa';
 import './Header.css';
+
+const FaPlayCircle = FaPlayCircleOrig as any;
+const FaSearch = FaSearchOrig as any;
+const FaUserCircle = FaUserCircleOrig as any;
 
 const Header: React.FC = () => {
   return (
