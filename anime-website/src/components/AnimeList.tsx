@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AnimeCard, { Anime } from './AnimeCard';
+import PageTitleHero from './PageTitleHero';
 
 // Placeholder data for now
 const placeholderAnimes: Anime[] = [
@@ -33,11 +34,14 @@ const AnimeList: React.FC = () => {
   if (error) return <p className="error-message">Error loading anime: {error}</p>;
 
   return (
-    <div className="anime-list">
-      {animes.map(anime => (
-        <AnimeCard key={anime.id} anime={anime} />
-      ))}
-    </div>
+    <>
+      <PageTitleHero />
+      <div className="anime-list">
+        {animes.map(anime => (
+          <AnimeCard key={anime.id} anime={anime} />
+        ))}
+      </div>
+    </>
   );
 };
 
