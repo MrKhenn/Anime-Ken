@@ -30,9 +30,9 @@ const AnimeDetail: React.FC = () => {
     }, 500);
   }, [animeId]);
 
-  if (loading) return <p>Loading details...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!anime) return <p>Anime not found.</p>;
+  if (loading) return <p className="loading-message">Loading details...</p>;
+  if (error) return <p className="error-message">Error: {error}</p>;
+  if (!anime) return <p className="error-message">Anime not found.</p>;
 
   return (
     <div className="anime-detail">

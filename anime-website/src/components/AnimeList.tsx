@@ -22,8 +22,8 @@ const AnimeList: React.FC = () => {
     }, 1000);
   }, []);
 
-  if (loading) return <p>Loading anime...</p>;
-  if (error) return <p>Error loading anime: {error}</p>;
+  if (loading) return <p className="loading-message">Loading anime...</p>;
+  if (error) return <p className="error-message">Error loading anime: {error}</p>;
 
   return (
     <div className="anime-list">

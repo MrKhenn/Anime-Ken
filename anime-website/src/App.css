@@ -1,3 +1,14 @@
+body {
+  background-color: #121212;
+  color: #E0E0E0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .App {
   text-align: center;
 }
@@ -8,26 +19,33 @@ main {
 }
 
 header {
-  background-color: #282c34;
+  background-color: #1A1A1A;
   padding: 20px;
-  color: white;
+  color: #E0E0E0;
+  border-bottom: 1px solid #424242;
+}
+
+header h1 {
+  color: #800020; /* Wine-red for the main title */
 }
 
 header nav a {
   margin: 0 10px;
-  color: white;
+  color: #C04040;
   text-decoration: none;
 }
 
-header nav a:hover {
+header nav a:hover, header nav a:focus {
+  color: #D35454;
   text-decoration: underline;
 }
 
 footer {
-  background-color: #f0f0f0;
+  background-color: #1A1A1A;
   padding: 10px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #424242;
   margin-top: 20px;
+  color: #E0E0E0;
 }
 
 .anime-list {
@@ -38,25 +56,80 @@ footer {
 }
 
 .anime-card {
-  border: 1px solid #ddd;
+  background-color: #1E1E1E;
+  border: 1px solid #424242;
   padding: 15px;
   width: 200px;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.4); /* Adjusted shadow for dark theme */
+  color: #E0E0E0;
+  transition: transform 0.2s ease-in-out;
+}
+
+.anime-card:hover {
+  transform: translateY(-5px);
+  border-color: #800020;
 }
 
 .anime-card img {
   max-width: 100%;
   height: auto;
   margin-bottom: 10px;
+  border-radius: 4px; /* Slightly rounded images */
+}
+
+.anime-card h2 {
+  font-size: 1.1em;
+  color: #E0E0E0; /* Ensure card titles are also light */
+  margin-bottom: 10px;
+}
+
+.anime-card a {
+  color: #C04040;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.anime-card a:hover {
+  color: #D35454;
+  text-decoration: underline;
 }
 
 .anime-detail {
-  padding: 20px;
+  background-color: #1E1E1E; /* Detail view can share card background or be slightly different */
+  padding: 25px;
+  margin: 20px auto;
+  max-width: 800px; /* Limit width for better readability */
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+  color: #E0E0E0;
+}
+
+.anime-detail h1 {
+  color: #800020; /* Wine-red for anime title */
 }
 
 .anime-detail img {
-  max-width: 300px;
+  max-width: 100%; /* Allow image to be responsive within its container */
+  max-height: 400px; /* Max height for the image */
+  width: auto; /* Maintain aspect ratio */
   height: auto;
-  margin-bottom: 15px;
-  border: 1px solid #eee;
+  margin-bottom: 20px;
+  border: 1px solid #424242;
+  border-radius: 6px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Generic paragraph styling for readability */
+p {
+  line-height: 1.6;
+  color: #E0E0E0;
+}
+
+/* Loading and error messages */
+p.loading-message, p.error-message {
+  font-size: 1.2em;
+  padding: 20px;
+  color: #800020;
 }
