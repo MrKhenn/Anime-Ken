@@ -41,6 +41,7 @@ footer {
   box-shadow: 2px 2px 8px rgba(0,0,0,0.4); /* Adjusted shadow for dark theme */
   color: #E0E0E0;
   transition: transform 0.2s ease-in-out;
+  border-radius: 8px;
 }
 
 .anime-card:hover {

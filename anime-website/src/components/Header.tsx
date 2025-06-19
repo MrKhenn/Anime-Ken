@@ -9,7 +9,7 @@ const Header: React.FC = () => {
       <div className="header-left">
         <Link to="/" className="logo-link">
           <FaPlayCircle className="logo-icon" />
-          <span className="logo-text">AniSite</span>
+          <span className="logo-text">Ani-Verse</span>
         </Link>
         <nav className="main-nav">
           <Link to="/">Home</Link>
