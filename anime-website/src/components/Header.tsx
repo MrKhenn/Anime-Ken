@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaUserCircle, FaFilm } from 'react-icons/fa';
+import { FaSearch, FaUserCircle, FaPlayCircle } from 'react-icons/fa';
 import './Header.css';
 
 const Header: React.FC = () => {
@@ -8,7 +8,7 @@ const Header: React.FC = () => {
     <header className="site-header">
       <div className="header-left">
         <Link to="/" className="logo-link">
-          <FaFilm className="logo-icon" />
+          <FaPlayCircle className="logo-icon" />
           <span className="logo-text">AniSite</span>
         </Link>
         <nav className="main-nav">
