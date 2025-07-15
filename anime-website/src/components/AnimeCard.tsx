@@ -5,11 +5,11 @@ import Swal from 'sweetalert2';
 import './AnimeCard.css'; // Assuming some styles might be here or in App.css
 
 export interface Anime {
-  id: string;
-  title: string;
-  imageUrl?: string; // Optional image
-  synopsis?: string;
-  streamtapeId?: string;
+  Title: string;
+  Year: string;
+  imdbID: string;
+  Type: string;
+  Poster: string;
 }
 
 interface AnimeCardProps {
@@ -18,25 +18,28 @@ interface AnimeCardProps {
 
 const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
   const handleViewDetailsClick = () => {
+    // Note: The details in OMDb free API are limited.
+    // A full synopsis would require another API call using the imdbID.
+    // For this modal, we'll just show the available info.
     Swal.fire({
-      title: anime.title,
+      title: anime.Title,
       html: `
-        ${anime.imageUrl ? `<img src="${anime.imageUrl}" alt="${anime.title}" style="max-width: 100%; height: auto; margin-bottom: 15px; border-radius: 5px;">` : ''}
-        <p style="text-align: left; font-size: 0.9em;">${anime.synopsis || 'No synopsis available.'}</p>
+        <p style="text-align: left;"><b>Year:</b> ${anime.Year}</p>
+        <p style="text-align: left;"><b>Type:</b> ${anime.Type}</p>
       `,
+      imageUrl: anime.Poster !== 'N/A' ? anime.Poster : undefined,
+      imageAlt: anime.Title,
       confirmButtonText: 'Close',
-      width: '500px', // A bit wider for content
-      theme: 'dark', // Apply dark theme directly
-      footer: anime.streamtapeId
-        ? `<a href="/watch/${anime.id}" style="background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">Watch Now</a>`
-        : '<span>No video link available</span>'
+      width: '400px',
+      theme: 'dark',
+      footer: `<a href="https://www.imdb.com/title/${anime.imdbID}" target="_blank" rel="noopener noreferrer" style="background-color: #f5c518; color: black; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">View on IMDb</a>`
     });
   };
 
   return (
     <div className="anime-card">
-      {anime.imageUrl && <img src={anime.imageUrl} alt={anime.title} /* style from App.css */ />}
-      <h2>{anime.title}</h2>
+      <img src={anime.Poster !== 'N/A' ? anime.Poster : 'https://via.placeholder.com/100x150?text=No+Image'} alt={anime.Title} />
+      <h2>{anime.Title}</h2>
       {/* Changed Link to button */}
       <button onClick={handleViewDetailsClick} className="details-button">
         View Details

@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSearch } from '../context/SearchContext';
 import { FaSearch as FaSearchOrig, FaUserCircle as FaUserCircleOrig, FaPlayCircle as FaPlayCircleOrig } from 'react-icons/fa';
 import './Header.css';
 
+// Type assertion workaround for react-icons
 const FaPlayCircle = FaPlayCircleOrig as any;
 const FaSearch = FaSearchOrig as any;
 const FaUserCircle = FaUserCircleOrig as any;
 
 const Header: React.FC = () => {
+  const { setSearchQuery } = useSearch();
+  const [localQuery, setLocalQuery] = useState('');
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent page reload
+    if (localQuery.trim()) {
+      setSearchQuery(localQuery.trim());
+    }
+  };
+
   return (
     <header className="site-header">
       <div className="header-left">
@@ -22,12 +34,17 @@ const Header: React.FC = () => {
         </nav>
       </div>
       <div className="header-right">
-        <div className="search-bar">
-          <input type="text" placeholder="Search anime..." />
+        <form className="search-bar" onSubmit={handleSearchSubmit}>
+          <input
+            type="text"
+            placeholder="Search anime..."
+            value={localQuery}
+            onChange={(e) => setLocalQuery(e.target.value)}
+          />
           <button type="submit" aria-label="Search">
             <FaSearch />
           </button>
-        </div>
+        </form>
         <FaUserCircle className="user-icon" />
       </div>
     </header>
