@@ -9,6 +9,7 @@ export interface Anime {
   title: string;
   imageUrl?: string; // Optional image
   synopsis?: string;
+  streamtapeId?: string;
 }
 
 interface AnimeCardProps {
@@ -26,6 +27,9 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
       confirmButtonText: 'Close',
       width: '500px', // A bit wider for content
       theme: 'dark', // Apply dark theme directly
+      footer: anime.streamtapeId
+        ? `<a href="/watch/${anime.id}" style="background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">Watch Now</a>`
+        : '<span>No video link available</span>'
     });
   };
 

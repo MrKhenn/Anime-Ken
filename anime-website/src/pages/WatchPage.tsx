@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Anime } from './AnimeCard'; // Re-use the Anime interface
+import { Anime } from '../components/AnimeCard'; // Import the Anime interface
+import './WatchPage.css'; // Styles for this page
 
-// Placeholder data for now
+// We need the anime data here to find the streamtapeId.
+// In a real app, this might come from a global state (context/redux) or a dedicated API call.
+// For this template, we'll redefine the placeholder data. It's redundant but keeps the component self-contained for now.
 const placeholderAnimes: Anime[] = [
   { id: '1', title: 'Anime Title 1', imageUrl: 'https://via.placeholder.com/150x220?text=Anime1', synopsis: 'This is a detailed synopsis for Anime Title 1. It tells the story of...', streamtapeId: 'rbAarvRPXdYbaxY' },
   { id: '2', title: 'Anime Title 2', imageUrl: 'https://via.placeholder.com/150x220?text=Anime2', synopsis: 'This is a detailed synopsis for Anime Title 2. It follows the adventures of...', streamtapeId: 'XklyYLYAZZZDZW' },
@@ -13,42 +16,38 @@ const placeholderAnimes: Anime[] = [
   { id: '7', title: 'Forest Spirit Tales', imageUrl: 'https://via.placeholder.com/150x220?text=ForestSpirit', synopsis: 'Mystical creatures and hidden wonders in an enchanted forest. Join Lina as she befriends the spirits and protects their ancient home.' },
   { id: '8', title: 'Island Survival Challenge', synopsis: 'Stranded on a deserted island, contestants face nature and each other. A gripping reality show where only the most resourceful will triumph.' },
   { id: '9', title: 'The Last Spellcaster', imageUrl: 'https://via.placeholder.com/150x220?text=Spellcaster', synopsis: 'Magic is fading, and only one can restore it. Lyra, the last of her kind, embarks on a quest to find the source of magic.' },
-  { id: '10', title: 'Galactic Footballers', imageUrl: 'https://via.placeholder.com/150x220?text=StarBall', synopsis: 'The biggest sport in the galaxy, played between planets! Follow the Earth team as they compete for the Galactic Cup.' },
+  { id: '10', 'title': 'Galactic Footballers', 'imageUrl': 'https://via.placeholder.com/150x220?text=StarBall', 'synopsis': 'The biggest sport in the galaxy, played between planets! Follow the Earth team as they compete for the Galactic Cup.' }
 ];
 
 
-const AnimeDetail: React.FC = () => {
+const WatchPage: React.FC = () => {
   const { animeId } = useParams<{ animeId: string }>();
-  const [anime, setAnime] = useState<Anime | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const anime = placeholderAnimes.find(a => a.id === animeId);
 
-  useEffect(() => {
-    // In a real app, you would fetch data from an API here based on animeId
-    setLoading(true);
-    setTimeout(() => { // Simulate API call
-      const foundAnime = placeholderAnimes.find(a => a.id === animeId);
-      if (foundAnime) {
-        setAnime(foundAnime);
-      } else {
-        setError('Anime not found.');
-      }
-      setLoading(false);
-    }, 500);
-  }, [animeId]);
-
-  if (loading) return <p className="loading-message">Loading details...</p>;
-  if (error) return <p className="error-message">Error: {error}</p>;
-  if (!anime) return <p className="error-message">Anime not found.</p>;
+  if (!anime) {
+    return <div className="watch-page-container"><p>Anime not found.</p></div>;
+  }
 
   return (
-    <div className="anime-detail">
-      <h1>{anime.title}</h1>
-      {anime.imageUrl && <img src={anime.imageUrl} alt={anime.title} style={{maxWidth: '200px'}} />}
-      <p>{anime.synopsis}</p>
-      {/* Add more details here: e.g., episodes, rating, genre */}
+    <div className="watch-page-container">
+      <h1 className="watch-title">Now Watching: {anime.title}</h1>
+      {anime.streamtapeId ? (
+        <div className="video-player-wrapper">
+          <iframe
+            src={`https://streamtape.com/e/\${anime.streamtapeId}`}
+            width="100%"
+            height="100%"
+            allowFullScreen
+            allow="autoplay; fullscreen"
+            title={`Streamtape Player - \${anime.title}`}
+            className="video-iframe"
+          ></iframe>
+        </div>
+      ) : (
+        <p className="video-not-available">Video is not available for this anime.</p>
+      )}
     </div>
   );
 };
 
-export default AnimeDetail;
+export default WatchPage;

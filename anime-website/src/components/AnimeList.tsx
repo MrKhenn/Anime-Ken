@@ -4,9 +4,9 @@ import PageTitleHero from './PageTitleHero';
 
 // Placeholder data for now
 const placeholderAnimes: Anime[] = [
-  { id: '1', title: 'Anime Title 1', imageUrl: 'https://via.placeholder.com/100x150?text=Anime1', synopsis: 'Synopsis for anime 1...' },
-  { id: '2', title: 'Anime Title 2', imageUrl: 'https://via.placeholder.com/100x150?text=Anime2', synopsis: 'Synopsis for anime 2...' },
-  { id: '3', title: 'Anime Title 3', synopsis: 'Synopsis for anime 3...' },
+  { id: '1', title: 'Anime Title 1', imageUrl: 'https://via.placeholder.com/100x150?text=Anime1', synopsis: 'Synopsis for anime 1...', streamtapeId: 'rbAarvRPXdYbaxY' },
+  { id: '2', title: 'Anime Title 2', imageUrl: 'https://via.placeholder.com/100x150?text=Anime2', synopsis: 'Synopsis for anime 2...', streamtapeId: 'XklyYLYAZZZDZW' },
+  { id: '3', title: 'Anime Title 3', synopsis: 'Synopsis for anime 3...', streamtapeId: 'B4GaCbJAAAyBxb' },
   { id: '4', title: 'Chronicles of the Void', imageUrl: 'https://via.placeholder.com/100x150?text=VoidChron', synopsis: 'A journey through space-time to uncover ancient secrets.' },
   { id: '5', title: 'Steel Alchemist: Legacy', imageUrl: 'https://via.placeholder.com/100x150?text=SteelLegacy', synopsis: 'In a world of machines and magic, a new hero rises.' },
   { id: '6', title: 'Cyber Runner Zero', imageUrl: 'https://via.placeholder.com/100x150?text=CyberZero', synopsis: 'Hacking the system in a dystopian future to fight for freedom.' },
