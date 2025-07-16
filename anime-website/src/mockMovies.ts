@@ -39,7 +39,7 @@ export const mockMovies = [
     Title: "Avatar",
     Genre: "Ciencia Ficción/Aventura",
     Plot: "Un espectáculo visual en un mundo exótico.",
-    Poster: "https://m.media-amazon.com/images/M/MV5BZDA0OGQxNTItMDZkMC00N2UyLTg3MzMtYTJmNjg3Nzk5OTU4XkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_SX300.jpg"
+    Poster: "https://m.media-amazon.com/images/M/MV5BMTYwOTEwNjAzMl5BMl5BanBnXkFtZTcwODc5MTUwMw@@._V1_SX300.jpg"
   },
   {
     imdbID: "tt0468569",
