@@ -7,7 +7,7 @@ const AnimeList: React.FC = () => {
   const [animes, setAnimes] = useState<Anime[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const searchQuery = "Lilo & Stitch"; // Hardcoded search query
+  const imdbID = "tt11655566"; // Hardcoded IMDb ID
 
   useEffect(() => {
     const fetchAnimes = async () => {
@@ -15,11 +15,11 @@ const AnimeList: React.FC = () => {
       setError(null);
 
       try {
-        const response = await fetch(`${OMDb_BASE_URL}?s=${searchQuery}&apikey=${OMDb_API_KEY}&type=movie`);
+        const response = await fetch(`${OMDb_BASE_URL}?i=${imdbID}&apikey=${OMDb_API_KEY}`);
         const data = await response.json();
 
         if (data.Response === "True") {
-          setAnimes(data.Search);
+          setAnimes([data]);
         } else {
           setAnimes([]);
           setError(data.Error);
@@ -32,14 +32,14 @@ const AnimeList: React.FC = () => {
       }
     };
 
-    if (searchQuery) {
+    if (imdbID) {
       fetchAnimes();
     }
   }, []); // Removed searchQuery from dependency array to fetch only once
 
   const renderContent = () => {
     if (loading) {
-      return <p className="loading-message">Searching for '{searchQuery}'...</p>;
+      return <p className="loading-message">Searching for movie with ID '{imdbID}'...</p>;
     }
 
     if (error) {
@@ -47,7 +47,7 @@ const AnimeList: React.FC = () => {
     }
 
     if (animes.length === 0) {
-        return <p>No results found for '{searchQuery}'. Try a different search!</p>
+        return <p>No results found for movie with ID '{imdbID}'. Try a different search!</p>
     }
 
     return (
