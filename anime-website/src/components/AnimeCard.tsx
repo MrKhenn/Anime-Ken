@@ -1,6 +1,7 @@
 import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import StarRating from './StarRating';
 import './AnimeCard.css';
 
 export interface Anime {
@@ -9,6 +10,7 @@ export interface Anime {
   Genre: string;
   Plot: string;
   Poster: string;
+  Rating: number;
 }
 
 interface AnimeCardProps {
@@ -42,6 +44,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
     <div className="anime-card">
       <img src={anime.Poster !== 'N/A' ? anime.Poster : 'https://via.placeholder.com/100x150?text=No+Image'} alt={anime.Title} />
       <h2>{anime.Title}</h2>
+      <StarRating rating={anime.Rating} />
       <button onClick={handleViewDetailsClick} className="details-button">
         Ver detalles
       </button>
