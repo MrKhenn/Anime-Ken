@@ -34,6 +34,19 @@
   color: #fff;
 }
 
+.metadata {
+  display: flex;
+  gap: 15px;
+  margin: 10px 0;
+  font-size: 0.9em;
+  color: #aaa;
+}
+
+.approval-rating {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
 .video-player-container {
   margin-top: 20px;
 }
