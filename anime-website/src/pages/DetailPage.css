@@ -42,6 +42,19 @@
   color: #aaa;
 }
 
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.rating span {
+  color: #ffc107;
+  font-size: 20px;
+}
+
 .approval-rating {
   margin: 10px 0;
   font-weight: bold;

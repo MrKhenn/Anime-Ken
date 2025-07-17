@@ -1,28 +1,14 @@
 import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import StarRating from './StarRating';
 import './AnimeCard.css';
 
 export interface Anime {
   imdbID: string;
   Title: string;
   Year: string;
-  Rated: string;
-  Released: string;
-  Runtime: string;
-  Genre: string;
-  Director: string;
-  Writer: string;
-  Actors: string;
-  Plot: string;
-  Language: string;
-  Country: string;
-  Awards: string;
   Poster: string;
   imdbRating: string;
-  imdbVotes: string;
-  Rating: number;
 }
 
 interface AnimeCardProps {
@@ -35,10 +21,6 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
   const handleViewDetailsClick = () => {
     Swal.fire({
       title: anime.Title,
-      html: `
-        <p style="text-align: left;"><b>Género:</b> ${anime.Genre}</p>
-        <p style="text-align: left;"><b>Sinopsis:</b> ${anime.Plot}</p>
-      `,
       imageUrl: anime.Poster,
       imageAlt: anime.Title,
       confirmButtonText: 'Ver ahora',
@@ -56,7 +38,9 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
     <div className="anime-card">
       <img src={anime.Poster !== 'N/A' ? anime.Poster : 'https://via.placeholder.com/100x150?text=No+Image'} alt={anime.Title} />
       <h2>{anime.Title}</h2>
-      <StarRating rating={anime.Rating} />
+      <div className="rating">
+        <span>★</span> {anime.imdbRating}/10
+      </div>
       <button onClick={handleViewDetailsClick} className="details-button">
         Ver detalles
       </button>

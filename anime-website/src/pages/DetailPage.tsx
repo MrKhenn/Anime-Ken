@@ -1,19 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { mockMovies } from '../mockMovies';
-import StarRating from '../components/StarRating';
+import { OMDb_API_KEY, OMDb_BASE_URL } from '../apiConfig';
 import './DetailPage.css';
 
 const DetailPage: React.FC = () => {
   const { imdbID } = useParams<{ imdbID: string }>();
-  const movie = mockMovies.find(m => m.imdbID === imdbID);
+  const [movie, setMovie] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMovie = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${OMDb_BASE_URL}?i=${imdbID}&apikey=${OMDb_API_KEY}`);
+        const data = await response.json();
+        if (data.Response === "True") {
+          setMovie(data);
+        } else {
+          setError(data.Error);
+        }
+      } catch (err) {
+        setError('Failed to fetch data. Please check your connection.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (imdbID) {
+      fetchMovie();
+    }
+  }, [imdbID]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   if (!movie) {
     return <h2>Película no encontrada</h2>;
   }
 
   const streamtapeUrl = `https://streamtape.com/e/${movie.imdbID}`;
-
   const approvalPercentage = (parseFloat(movie.imdbRating) / 10) * 100;
 
   return (
@@ -30,7 +61,9 @@ const DetailPage: React.FC = () => {
               <span>{movie.Rated}</span>
               <span>{movie.Runtime}</span>
             </div>
-            <StarRating rating={movie.Rating} />
+            <div className="rating">
+              <span>★</span> {movie.imdbRating}/10
+            </div>
             <div className="approval-rating">
               <span>{approvalPercentage.toFixed(0)}% de aprobación</span>
             </div>
