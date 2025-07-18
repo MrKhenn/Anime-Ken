@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { OMDb_API_KEY, OMDb_BASE_URL } from '../apiConfig';
+import { getCache, setCache } from '../services/cacheService';
 import './DetailPage.css';
 
 const DetailPage: React.FC = () => {
@@ -11,6 +12,15 @@ const DetailPage: React.FC = () => {
 
   useEffect(() => {
     const fetchMovie = async () => {
+      const cacheKey = `movie-${imdbID}`;
+      const cachedData = getCache(cacheKey);
+
+      if (cachedData) {
+        setMovie(cachedData);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       setError(null);
       try {
@@ -18,6 +28,7 @@ const DetailPage: React.FC = () => {
         const data = await response.json();
         if (data.Response === "True") {
           setMovie(data);
+          setCache(cacheKey, data);
         } else {
           setError(data.Error);
         }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AnimeCard, { Anime } from './AnimeCard';
 import PageTitleHero from './PageTitleHero';
 import { OMDb_API_KEY, OMDb_BASE_URL } from '../apiConfig';
+import { getCache, setCache } from '../services/cacheService';
 
 const AnimeList: React.FC = () => {
   const [animes, setAnimes] = useState<Anime[]>([]);
@@ -10,6 +11,15 @@ const AnimeList: React.FC = () => {
 
   useEffect(() => {
     const fetchAnimes = async () => {
+      const cacheKey = 'anime-list-Guardians of the Galaxy';
+      const cachedData = getCache(cacheKey);
+
+      if (cachedData) {
+        setAnimes(cachedData);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       setError(null);
       try {
@@ -17,6 +27,7 @@ const AnimeList: React.FC = () => {
         const data = await response.json();
         if (data.Response === "True") {
           setAnimes(data.Search);
+          setCache(cacheKey, data.Search);
         } else {
           setError(data.Error);
         }
