@@ -57,13 +57,14 @@ const DetailPage: React.FC = () => {
 
   const streamtapeUrl = `https://streamtape.com/e/${movie.imdbID}`;
   const approvalPercentage = (parseFloat(movie.imdbRating) / 10) * 100;
+  const posterUrl = `http://img.omdbapi.com/?i=${movie.imdbID}&h=300&apikey=${OMDb_API_KEY}`;
 
   return (
     <div className="detail-page-background">
       <div className="detail-container">
         <div className="detail-info-container">
           <div className="poster-container">
-            <img src={movie.Poster} alt={movie.Title} />
+            <img src={posterUrl} alt={movie.Title} />
           </div>
           <div className="info-container">
             <h1>{movie.Title}</h1>

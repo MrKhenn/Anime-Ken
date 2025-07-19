@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSearch } from '../context/SearchContext';
 import { FaSearch as FaSearchOrig, FaUserCircle as FaUserCircleOrig, FaPlayCircle as FaPlayCircleOrig } from 'react-icons/fa';
 import './Header.css';
@@ -12,11 +12,13 @@ const FaUserCircle = FaUserCircleOrig as any;
 const Header: React.FC = () => {
   const { setSearchQuery } = useSearch();
   const [localQuery, setLocalQuery] = useState('');
+  const navigate = useNavigate();
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Prevent page reload
     if (localQuery.trim()) {
       setSearchQuery(localQuery.trim());
+      navigate('/');
     }
   };
 
@@ -25,7 +27,7 @@ const Header: React.FC = () => {
       <div className="header-left">
         <Link to="/" className="logo-link">
           <FaPlayCircle className="logo-icon" />
-          <span className="logo-text">Ani-Verse</span>
+          <span className="logo-text">MovieStream</span>
         </Link>
         <nav className="main-nav">
           <Link to="/">Home</Link>
@@ -37,7 +39,7 @@ const Header: React.FC = () => {
         <form className="search-bar" onSubmit={handleSearchSubmit}>
           <input
             type="text"
-            placeholder="Search anime..."
+            placeholder="Search for movies..."
             value={localQuery}
             onChange={(e) => setLocalQuery(e.target.value)}
           />

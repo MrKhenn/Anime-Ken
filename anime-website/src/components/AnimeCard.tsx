@@ -15,13 +15,16 @@ interface AnimeCardProps {
   anime: Anime;
 }
 
+import { OMDb_API_KEY } from '../apiConfig';
+
 const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
   const navigate = useNavigate();
+  const posterUrl = `http://img.omdbapi.com/?i=${anime.imdbID}&h=300&apikey=${OMDb_API_KEY}`;
 
   const handleViewDetailsClick = () => {
     Swal.fire({
       title: anime.Title,
-      imageUrl: anime.Poster,
+      imageUrl: posterUrl,
       imageAlt: anime.Title,
       confirmButtonText: 'Ver ahora',
       showCancelButton: true,
@@ -36,7 +39,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
 
   return (
     <div className="anime-card">
-      <img src={anime.Poster !== 'N/A' ? anime.Poster : 'https://via.placeholder.com/100x150?text=No+Image'} alt={anime.Title} />
+      <img src={posterUrl} alt={anime.Title} />
       <h2>{anime.Title}</h2>
       <div className="rating">
         <span>★</span> {anime.imdbRating}/10
