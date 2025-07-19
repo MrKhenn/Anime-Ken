@@ -1,6 +1,7 @@
 import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { OMDb_API_KEY } from '../apiConfig';
 import './AnimeCard.css';
 
 export interface Anime {
@@ -14,8 +15,6 @@ export interface Anime {
 interface AnimeCardProps {
   anime: Anime;
 }
-
-import { OMDb_API_KEY } from '../apiConfig';
 
 const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
   const navigate = useNavigate();
