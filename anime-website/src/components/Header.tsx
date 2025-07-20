@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSearch } from '../context/SearchContext';
 import { FaSearch as FaSearchOrig, FaUserCircle as FaUserCircleOrig, FaPlayCircle as FaPlayCircleOrig } from 'react-icons/fa';
 import './Header.css';
 
@@ -10,15 +9,13 @@ const FaSearch = FaSearchOrig as any;
 const FaUserCircle = FaUserCircleOrig as any;
 
 const Header: React.FC = () => {
-  const { setSearchQuery } = useSearch();
   const [localQuery, setLocalQuery] = useState('');
   const navigate = useNavigate();
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Prevent page reload
     if (localQuery.trim()) {
-      setSearchQuery(localQuery.trim());
-      navigate('/');
+      navigate(`/search/${localQuery.trim()}`);
     }
   };
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import AnimeCard, { Anime } from './AnimeCard';
-import PageTitleHero from './PageTitleHero';
+import { useParams } from 'react-router-dom';
+import AnimeCard, { Anime } from '../components/AnimeCard';
 import { OMDb_API_KEY, OMDb_BASE_URL } from '../apiConfig';
 
-const AnimeList: React.FC = () => {
+const SearchPage: React.FC = () => {
+  const { query } = useParams<{ query: string }>();
   const [animes, setAnimes] = useState<Anime[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -13,7 +14,7 @@ const AnimeList: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${OMDb_BASE_URL}?s=Matrix&apikey=${OMDb_API_KEY}`);
+        const response = await fetch(`${OMDb_BASE_URL}?s=${query}&apikey=${OMDb_API_KEY}`);
         const data = await response.json();
         if (data.Response === "True") {
           setAnimes(data.Search);
@@ -26,33 +27,20 @@ const AnimeList: React.FC = () => {
         setLoading(false);
       }
     };
-    fetchAnimes();
-  }, []);
-
-  const renderContent = () => {
-    if (loading) {
-      return <p className="loading-message">Loading...</p>;
+    if (query) {
+      fetchAnimes();
     }
-
-    if (error) {
-      return <p className="error-message">Error: {error}</p>;
-    }
-
-    return (
-      <div className="anime-list">
-        {animes.map(anime => (
-          <AnimeCard key={anime.imdbID} anime={anime} />
-        ))}
-      </div>
-    );
-  };
+  }, [query]);
 
   return (
-    <>
-      <PageTitleHero />
-      {renderContent()}
-    </>
+    <div className="anime-list">
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+      {animes.map(anime => (
+        <AnimeCard key={anime.imdbID} anime={anime} />
+      ))}
+    </div>
   );
 };
 
-export default AnimeList;
+export default SearchPage;

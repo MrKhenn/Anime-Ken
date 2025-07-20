@@ -5,9 +5,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AnimeList from './components/AnimeList';
+import AnimeDetail from './components/AnimeDetail';
 import PremieresPage from './pages/PremieresPage';
 import AboutPage from './pages/AboutPage';
-import DetailPage from './pages/DetailPage';
+import WatchPage from './pages/WatchPage';
+import SearchPage from './pages/SearchPage';
 import './App.css'; // Assuming you have some basic app-wide styles
 
 const App: React.FC = () => {
@@ -19,9 +21,11 @@ const App: React.FC = () => {
           <main>
             <Routes>
               <Route path="/" element={<AnimeList />} />
+              <Route path="/anime/:animeId" element={<AnimeDetail />} />
               <Route path="/premieres" element={<PremieresPage />} />
               <Route path="/about" element={<AboutPage />} />
-              <Route path="/movie/:imdbID" element={<DetailPage />} />
+              <Route path="/watch/:animeId" element={<WatchPage />} />
+              {/* You can add more routes here, e.g., for specific genres, user profiles, etc. */}
             </Routes>
           </main>
           <Footer />
