@@ -12,6 +12,8 @@ const SearchPage: React.FC = () => {
 
   useEffect(() => {
     const fetchAnimes = async () => {
+      if (!query) return; // No hacer nada si no hay consulta
+
       setLoading(true);
       setError(null);
       try {
@@ -20,6 +22,7 @@ const SearchPage: React.FC = () => {
         if (data.Response === "True") {
           setAnimes(data.Search);
         } else {
+          setAnimes([]); // Limpiar resultados anteriores si hay un error
           setError(data.Error);
         }
       } catch (err) {
@@ -28,10 +31,9 @@ const SearchPage: React.FC = () => {
         setLoading(false);
       }
     };
-    if (query) {
-      fetchAnimes();
-    }
-  }, [query]);
+
+    fetchAnimes();
+  }, [location.search]); // Depender de location.search para detectar cambios en la URL
 
   return (
     <div className="anime-list">
