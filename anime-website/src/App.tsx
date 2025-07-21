@@ -5,10 +5,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AnimeList from './components/AnimeList';
-import AnimeDetail from './components/AnimeDetail';
+import AnimeDetail from './components/AnimeDetail.tsx';
 import PremieresPage from './pages/PremieresPage';
 import AboutPage from './pages/AboutPage';
-import WatchPage from './pages/WatchPage';
+import WatchPage from './pages/WatchPage.tsx';
 import SearchPage from './pages/SearchPage';
 import './App.css'; // Assuming you have some basic app-wide styles
 
