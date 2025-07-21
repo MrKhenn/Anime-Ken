@@ -15,7 +15,7 @@ const Header: React.FC = () => {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Prevent page reload
     if (localQuery.trim()) {
-      navigate(`/search/${localQuery.trim()}`);
+      navigate(`/search?query=${localQuery.trim()}`);
     }
   };
 

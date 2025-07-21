@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import AnimeCard, { Anime } from '../components/AnimeCard';
 import { OMDb_API_KEY, OMDb_BASE_URL } from '../apiConfig';
 
 const SearchPage: React.FC = () => {
-  const { query } = useParams<{ query: string }>();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search).get('query');
   const [animes, setAnimes] = useState<Anime[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +15,7 @@ const SearchPage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${OMDb_BASE_URL}?s=${query}&apikey=${OMDb_API_KEY}`);
+        const response = await fetch(`http://localhost:5000/api/search?query=${query}`);
         const data = await response.json();
         if (data.Response === "True") {
           setAnimes(data.Search);
