@@ -24,7 +24,7 @@ const DetailPage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${OMDb_BASE_URL}?i=${imdbID}&apikey=${OMDb_API_KEY}`);
+        const response = await fetch(`http://localhost:5000/api/movie/${imdbID}`);
         const data = await response.json();
         if (data.Response === "True") {
           setMovie(data);

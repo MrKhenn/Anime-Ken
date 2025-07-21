@@ -21,7 +21,7 @@ const App: React.FC = () => {
           <main>
             <Routes>
               <Route path="/" element={<AnimeList />} />
-              <Route path="/anime/:animeId" element={<AnimeDetail />} />
+              <Route path="/movie/:imdbID" element={<AnimeDetail />} />
               <Route path="/premieres" element={<PremieresPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/watch/:animeId" element={<WatchPage />} />
