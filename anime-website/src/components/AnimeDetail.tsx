@@ -57,7 +57,9 @@ const DetailPage: React.FC = () => {
 
   const streamtapeUrl = `https://streamtape.com/e/${movie.imdbID}`;
   const approvalPercentage = (parseFloat(movie.imdbRating) / 10) * 100;
-  const posterUrl = `http://img.omdbapi.com/?i=${movie.imdbID}&h=300&apikey=${OMDb_API_KEY}`;
+  const posterUrl = movie.Poster && movie.Poster !== 'N/A'
+    ? movie.Poster
+    : 'https://via.placeholder.com/300x450.png?text=No+Poster';
 
   return (
     <div className="detail-page-background">

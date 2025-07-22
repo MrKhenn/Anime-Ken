@@ -18,7 +18,9 @@ interface AnimeCardProps {
 
 const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
   const navigate = useNavigate();
-  const posterUrl = `http://img.omdbapi.com/?i=${anime.imdbID}&h=300&apikey=${OMDb_API_KEY}`;
+  const posterUrl = anime.Poster && anime.Poster !== 'N/A'
+    ? anime.Poster
+    : 'https://via.placeholder.com/300x450.png?text=No+Poster';
 
   const handleViewDetailsClick = () => {
     Swal.fire({

@@ -1,25 +1,52 @@
 // Importaciones
+require('dotenv').config(); // Carga las variables de entorno desde .env
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors'); // Para permitir solicitudes desde otros dominios
+const cors = require('cors');
+const { query, param, validationResult } = require('express-validator');
+const rateLimit = require('express-rate-limit');
 
 // Configuración de la aplicación Express
 const app = express();
 const PORT = process.env.PORT || 5000; // Usa el puerto de entorno o 5000 por defecto
 
 // Configuración de la API de OMDb
-// ¡Importante! Nunca expongas tu API Key directamente en el código fuente en producción.
-// Usa variables de entorno para esto.
-const OMDb_API_KEY = process.env.OMDB_API_KEY || '274e7f62';
+const OMDb_API_KEY = process.env.OMDB_API_KEY;
 const OMDb_BASE_URL = 'http://www.omdbapi.com/';
+
+if (!OMDb_API_KEY) {
+  throw new Error('La variable de entorno OMDB_API_KEY es requerida.');
+}
 
 // --- Middlewares ---
 // Habilita CORS para todas las solicitudes.
-// Esto es crucial para que tu frontend (si está en un dominio diferente) pueda comunicarse con tu backend.
 app.use(cors());
 
-// Middleware para parsear JSON en el cuerpo de las solicitudes (aunque no lo uses directamente en este caso, es buena práctica)
+// Limita las solicitudes para proteger la API de OMDb
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // limita cada IP a 100 solicitudes por ventana de 15 minutos
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Demasiadas solicitudes desde esta IP, por favor intente de nuevo después de 15 minutos',
+});
+
+app.use('/api/', limiter); // Aplica el limitador de velocidad a todas las rutas de la API
+
+// Middleware para parsear JSON en el cuerpo de las solicitudes
 app.use(express.json());
+
+// Configuración del límite de solicitudes
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // Limita cada IP a 100 solicitudes por ventana de 15 minutos
+  standardHeaders: true, // Devuelve la información del límite en los encabezados `RateLimit-*`
+  legacyHeaders: false, // Deshabilita los encabezados `X-RateLimit-*`
+  message: 'Demasiadas solicitudes desde esta IP, por favor intente de nuevo después de 15 minutos',
+});
+
+// Aplica el límite de solicitudes a todas las rutas de la API
+app.use('/api', apiLimiter);
 
 // --- Rutas de la API ---
 
@@ -29,15 +56,26 @@ app.use(express.json());
  * @param {string} query - El término de búsqueda.
  * @access Public
  */
-app.get('/api/search', async (req, res) => {
-  const { query } = req.query; // Desestructuración para obtener 'query' de req.query
+app.get(
+  '/api/search',
+  [
+    query('query')
+      .notEmpty()
+      .withMessage('El parámetro "query" es requerido para la búsqueda.')
+      .isString()
+      .withMessage('El parámetro "query" debe ser una cadena de texto.')
+      .trim()
+      .escape(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-  // Validar si el parámetro 'query' existe
-  if (!query) {
-    return res.status(400).json({ error: 'El parámetro "query" es requerido para la búsqueda.' });
-  }
+    const { query } = req.query;
 
-  try {
+    try {
     const response = await axios.get(`${OMDb_BASE_URL}?s=${encodeURIComponent(query)}&apikey=${OMDb_API_KEY}`);
 
     // Manejo de respuestas vacías o errores específicos de OMDb
@@ -48,10 +86,20 @@ app.get('/api/search', async (req, res) => {
 
     res.json(response.data); // Envía los datos directamente desde OMDb
   } catch (error) {
-    // Registro del error para depuración
-    console.error('Error al buscar en OMDb API:', error.message);
-    // Respuesta de error genérica para el cliente
-    res.status(500).json({ error: 'Error interno del servidor al buscar datos en OMDb.' });
+    if (error.response) {
+      // La solicitud se hizo y el servidor respondió con un código de estado
+      // que no está en el rango de 2xx
+      console.error('Error de respuesta de OMDb API:', error.response.data);
+      res.status(error.response.status).json({ error: 'Error al comunicarse con la API de OMDb.' });
+    } else if (error.request) {
+      // La solicitud se hizo pero no se recibió respuesta
+      console.error('No se recibió respuesta de OMDb API:', error.request);
+      res.status(503).json({ error: 'El servicio de OMDb no está disponible en este momento.' });
+    } else {
+      // Algo sucedió al configurar la solicitud que provocó un error
+      console.error('Error al configurar la solicitud a OMDb API:', error.message);
+      res.status(500).json({ error: 'Error interno del servidor.' });
+    }
   }
 });
 
@@ -61,15 +109,24 @@ app.get('/api/search', async (req, res) => {
  * @param {string} imdbID - El ID de IMDb de la película/serie.
  * @access Public
  */
-app.get('/api/movie/:imdbID', async (req, res) => {
-  const { imdbID } = req.params; // Desestructuración para obtener 'imdbID' de req.params
+app.get(
+  '/api/movie/:imdbID',
+  [
+    param('imdbID')
+      .isString()
+      .withMessage('El parámetro "imdbID" debe ser una cadena de texto.')
+      .matches(/^tt\d{7,8}$/)
+      .withMessage('El parámetro "imdbID" no tiene un formato válido.'),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-  // Validar si el parámetro 'imdbID' existe
-  if (!imdbID) {
-    return res.status(400).json({ error: 'El parámetro "imdbID" es requerido para obtener detalles de la película.' });
-  }
+    const { imdbID } = req.params;
 
-  try {
+    try {
     const response = await axios.get(`${OMDb_BASE_URL}?i=${encodeURIComponent(imdbID)}&apikey=${OMDb_API_KEY}`);
 
     // Manejo de respuestas vacías o errores específicos de OMDb
@@ -79,10 +136,16 @@ app.get('/api/movie/:imdbID', async (req, res) => {
 
     res.json(response.data); // Envía los datos directamente desde OMDb
   } catch (error) {
-    // Registro del error para depuración
-    console.error('Error al obtener detalles de OMDb API:', error.message);
-    // Respuesta de error genérica para el cliente
-    res.status(500).json({ error: 'Error interno del servidor al obtener detalles de OMDb.' });
+    if (error.response) {
+      console.error('Error de respuesta de OMDb API:', error.response.data);
+      res.status(error.response.status).json({ error: 'Error al comunicarse con la API de OMDb.' });
+    } else if (error.request) {
+      console.error('No se recibió respuesta de OMDb API:', error.request);
+      res.status(503).json({ error: 'El servicio de OMDb no está disponible en este momento.' });
+    } else {
+      console.error('Error al configurar la solicitud a OMDb API:', error.message);
+      res.status(500).json({ error: 'Error interno del servidor.' });
+    }
   }
 });
 
@@ -91,10 +154,20 @@ app.use((req, res, next) => {
     res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
-// Manejador de errores global (opcional pero recomendado para errores no capturados)
+// Manejador de errores global
 app.use((err, req, res, next) => {
-    console.error(err.stack); // Imprime el stack trace del error en la consola del servidor
-    res.status(500).send('¡Algo salió mal!');
+  console.error(err.stack);
+
+  if (err.response) {
+    // Errores de la API de OMDb
+    return res.status(err.response.status).json({ error: err.response.data.Error || 'Error en la API de OMDb.' });
+  } else if (err.request) {
+    // La solicitud se hizo pero no se recibió respuesta
+    return res.status(503).json({ error: 'No se pudo contactar con la API de OMDb. Inténtalo de nuevo más tarde.' });
+  } else {
+    // Otros errores
+    res.status(500).json({ error: 'Ha ocurrido un error interno en el servidor.' });
+  }
 });
 
 // --- Inicio del Servidor ---
