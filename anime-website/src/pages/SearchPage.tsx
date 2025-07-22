@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AnimeCard, { Anime } from '../components/AnimeCard';
-import { OMDb_API_KEY, OMDb_BASE_URL } from '../apiConfig';
 
 const SearchPage: React.FC = () => {
   const location = useLocation();
-  const query = new URLSearchParams(location.search).get('query');
+  const [query, setQuery] = useState('');
   const [animes, setAnimes] = useState<Anime[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const newQuery = new URLSearchParams(location.search).get('query');
+    if (newQuery) {
+      setQuery(newQuery);
+    }
+  }, [location.search]);
+
+  useEffect(() => {
     const fetchAnimes = async () => {
-      if (!query) return; // No hacer nada si no hay consulta
+      if (!query) return;
 
       setLoading(true);
       setError(null);
@@ -22,7 +28,7 @@ const SearchPage: React.FC = () => {
         if (data.Response === "True") {
           setAnimes(data.Search);
         } else {
-          setAnimes([]); // Limpiar resultados anteriores si hay un error
+          setAnimes([]);
           setError(data.Error);
         }
       } catch (err) {
@@ -33,15 +39,18 @@ const SearchPage: React.FC = () => {
     };
 
     fetchAnimes();
-  }, [location.search]); // Depender de location.search para detectar cambios en la URL
+  }, [query]);
 
   return (
     <div className="anime-list">
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
-      {animes.map(anime => (
+      {!loading && !error && animes.length > 0 && animes.map(anime => (
         <AnimeCard key={anime.imdbID} anime={anime} />
       ))}
+      {!loading && !error && animes.length === 0 && query && (
+        <p>No se encontraron resultados para "{query}".</p>
+      )}
     </div>
   );
 };
