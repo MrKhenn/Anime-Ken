@@ -25,6 +25,7 @@ const App: React.FC = () => {
               <Route path="/premieres" element={<PremieresPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/watch/:animeId" element={<WatchPage />} />
+              <Route path="/search" element={<SearchPage />} />
               {/* You can add more routes here, e.g., for specific genres, user profiles, etc. */}
             </Routes>
           </main>
