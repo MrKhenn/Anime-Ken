@@ -27,9 +27,9 @@ const Header: React.FC = () => {
           <span className="logo-text">MovieStream</span>
         </Link>
         <nav className="main-nav">
-          <Link to="/">Home</Link>
-          <Link to="/premieres">Estrenos</Link>
-          <Link to="/about">Acerca de</Link>
+          <Link to="/" className="nav-link">Home</Link>
+          <Link to="/premieres" className="nav-link">Estrenos</Link>
+          <Link to="/about" className="nav-link">Acerca de</Link>
         </nav>
       </div>
       <div className="header-right">

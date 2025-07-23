@@ -10,12 +10,14 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const PORT = process.env.PORT || 5000; // Usa el puerto de entorno o 5000 por defecto
 
-// Configuración de la API de OMDb
+// Configuración de las APIs
 const OMDb_API_KEY = process.env.OMDB_API_KEY;
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const OMDb_BASE_URL = 'http://www.omdbapi.com/';
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
-if (!OMDb_API_KEY) {
-  throw new Error('La variable de entorno OMDB_API_KEY es requerida.');
+if (!OMDb_API_KEY || !TMDB_API_KEY) {
+  throw new Error('Las variables de entorno OMDB_API_KEY y TMDB_API_KEY son requeridas.');
 }
 
 // --- Middlewares ---
