@@ -57,16 +57,22 @@ const DetailPage: React.FC = () => {
 
   const streamtapeUrl = `https://streamtape.com/e/${movie.imdbID}`;
   const approvalPercentage = (parseFloat(movie.imdbRating) / 10) * 100;
-  const posterUrl = movie.Poster && movie.Poster !== 'N/A'
+  const posterUrl = movie.Poster && movie.Poster !== 'N/A' && movie.Poster !== 'NOT_FOUND'
     ? movie.Poster
-    : 'https://via.placeholder.com/300x450.png?text=No+Poster';
+    : null;
 
   return (
     <div className="detail-page-background">
       <div className="detail-container">
         <div className="detail-info-container">
           <div className="poster-container">
-            <img src={posterUrl} alt={movie.Title} />
+            {posterUrl ? (
+              <img src={posterUrl} alt={movie.Title} />
+            ) : (
+              <div className="no-poster-detail">
+                <span>Sin póster</span>
+              </div>
+            )}
           </div>
           <div className="info-container">
             <h1>{movie.Title}</h1>

@@ -18,9 +18,9 @@ interface AnimeCardProps {
 
 const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
   const navigate = useNavigate();
-  const posterUrl = anime.Poster && anime.Poster !== 'N/A'
+  const posterUrl = anime.Poster && anime.Poster !== 'N/A' && anime.Poster !== 'NOT_FOUND'
     ? anime.Poster
-    : 'https://via.placeholder.com/300x450.png?text=No+Poster';
+    : null;
 
   const handleViewDetailsClick = () => {
     Swal.fire({
@@ -40,7 +40,13 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
 
   return (
     <div className="anime-card">
-      <img src={posterUrl} alt={anime.Title} />
+      {posterUrl ? (
+        <img src={posterUrl} alt={anime.Title} />
+      ) : (
+        <div className="no-poster">
+          <span>Sin resultados</span>
+        </div>
+      )}
       <h2>{anime.Title}</h2>
       <div className="rating">
         <span>★</span> {anime.imdbRating}/10
