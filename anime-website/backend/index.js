@@ -8,6 +8,8 @@ if (!process.env.OMDB_API_KEY) {
   dotenv.config({ path: path.resolve(__dirname, '.env') });
 }
 
+console.log(process.env); // Añadido para depuración
+
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
