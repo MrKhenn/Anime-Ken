@@ -1,5 +1,13 @@
 // Importaciones
-require('dotenv').config(); // Carga las variables de entorno desde .env
+const dotenv = require('dotenv');
+const path = require('path');
+dotenv.config(); // Intenta cargar las variables de entorno automáticamente
+
+// Si la carga automática falla, intenta cargar manualmente desde la ruta del proyecto
+if (!process.env.OMDB_API_KEY) {
+  dotenv.config({ path: path.resolve(__dirname, '.env') });
+}
+
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
