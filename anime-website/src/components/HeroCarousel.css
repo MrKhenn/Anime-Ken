@@ -1,0 +1,49 @@
+.hero-carousel-image {
+  height: 60vh;
+  object-fit: cover;
+  filter: brightness(0.6);
+}
+
+.hero-carousel-caption {
+  text-align: left;
+  bottom: 20%;
+  left: 10%;
+  right: auto;
+  width: 50%;
+}
+
+.hero-carousel-caption h3 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.hero-carousel-caption p {
+  font-size: 1.2rem;
+}
+
+/* Estilos para los indicadores y controles */
+.carousel-indicators [data-bs-target] {
+  background-color: #ff0000;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(255, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .hero-carousel-caption {
+    width: 80%;
+    bottom: 10%;
+  }
+
+  .hero-carousel-caption h3 {
+    font-size: 2rem;
+  }
+
+  .hero-carousel-caption p {
+    font-size: 1rem;
+  }
+}

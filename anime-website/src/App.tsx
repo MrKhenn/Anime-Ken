@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import HomePageMovies from './components/HomePageMovies';
 import AnimeDetail from './components/AnimeDetail';
 import PremieresPage from './pages/PremieresPage';
+import HeroCarousel from './components/HeroCarousel';
 import AboutPage from './pages/AboutPage';
 import WatchPage from './pages/WatchPage';
 import SearchPage from './pages/SearchPage';
@@ -20,7 +21,10 @@ const App: React.FC = () => {
           <Header />
           <main>
             <Routes>
-              <Route path="/" element={<HomePageMovies />} />
+              <Route path="/" element={<>
+                <HeroCarousel />
+                <HomePageMovies />
+              </>} />
               <Route path="/movie/:imdbID" element={<AnimeDetail />} />
               <Route path="/premieres" element={<PremieresPage />} />
               <Route path="/about" element={<AboutPage />} />
