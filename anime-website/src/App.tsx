@@ -4,7 +4,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import AnimeList from './components/AnimeList';
+import HomePageMovies from './components/HomePageMovies';
 import AnimeDetail from './components/AnimeDetail';
 import PremieresPage from './pages/PremieresPage';
 import AboutPage from './pages/AboutPage';
@@ -20,7 +20,7 @@ const App: React.FC = () => {
           <Header />
           <main>
             <Routes>
-              <Route path="/" element={<AnimeList />} />
+              <Route path="/" element={<HomePageMovies />} />
               <Route path="/movie/:imdbID" element={<AnimeDetail />} />
               <Route path="/premieres" element={<PremieresPage />} />
               <Route path="/about" element={<AboutPage />} />
