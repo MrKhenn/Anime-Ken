@@ -22,7 +22,6 @@ const HeroCarousel: React.FC = () => {
 
   useEffect(() => {
     const fetchRandomMovies = async () => {
-      // Evita hacer la solicitud de nuevo si ya tenemos las películas
       if (movies.length > 0) {
         setLoading(false);
         return;
@@ -34,18 +33,15 @@ const HeroCarousel: React.FC = () => {
         const shuffled = popularMovies.sort(() => 0.5 - Math.random());
         const selectedTitles = shuffled.slice(0, 5);
 
-        const moviePromises = selectedTitles.map(title =>
-          fetch(`http://localhost:5000/api/search?query=${encodeURIComponent(title)}`)
-            .then(res => res.json())
-            .then(data => {
-              if (data.Response === 'True' && data.Search.length > 0) {
-                return data.Search[0];
-              }
-              return null;
-            })
-        );
-        const results = await Promise.all(moviePromises);
-        setMovies(results.filter((movie): movie is Anime => movie !== null));
+        const response = await fetch(`http://localhost:5000/api/movies`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ titles: selectedTitles }),
+        });
+        const data = await response.json();
+        setMovies(data);
       } catch (err) {
         setError('Failed to fetch movies for carousel.');
       } finally {
@@ -54,7 +50,7 @@ const HeroCarousel: React.FC = () => {
     };
 
     fetchRandomMovies();
-  }, [movies.length]); // Añade movies.length como dependencia
+  }, [movies.length]);
 
   if (loading) return <p>Loading carousel...</p>;
   if (error) return <p>Error loading carousel: {error}</p>;

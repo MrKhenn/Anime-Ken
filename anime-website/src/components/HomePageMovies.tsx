@@ -23,18 +23,15 @@ const HomePageMovies: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const moviePromises = movieTitles.map(title =>
-          fetch(`http://localhost:5000/api/search?query=${encodeURIComponent(title)}`)
-            .then(res => res.json())
-            .then(data => {
-              if (data.Response === 'True' && data.Search.length > 0) {
-                return data.Search[0]; // Tomamos el primer resultado que coincida
-              }
-              return null;
-            })
-        );
-        const results = await Promise.all(moviePromises);
-        setMovies(results.filter((movie): movie is Anime => movie !== null));
+        const response = await fetch(`http://localhost:5000/api/movies`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ titles: movieTitles }),
+        });
+        const data = await response.json();
+        setMovies(data);
       } catch (err) {
         setError('Failed to fetch movies.');
       } finally {

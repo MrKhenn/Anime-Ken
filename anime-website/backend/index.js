@@ -48,6 +48,43 @@ app.use('/api/', limiter); // Aplica el limitador de velocidad a todas las rutas
 // Middleware para parsear JSON en el cuerpo de las solicitudes
 app.use(express.json());
 
+// Nuevo endpoint para obtener múltiples películas
+app.post('/api/movies', async (req, res, next) => {
+  const { titles } = req.body;
+
+  if (!titles || !Array.isArray(titles) || titles.length === 0) {
+    return res.status(400).json({ error: 'Se requiere un array de títulos.' });
+  }
+
+  try {
+    const moviePromises = titles.map(async (title) => {
+      try {
+        const omdbResponse = await axios.get(`${OMDb_BASE_URL}?t=${encodeURIComponent(title)}&apikey=${OMDb_API_KEY}`);
+        if (omdbResponse.data.Response === 'True') {
+          let movie = omdbResponse.data;
+          if (movie.Poster === 'N/A') {
+            const tmdbResponse = await axios.get(`${TMDB_BASE_URL}/find/${movie.imdbID}?api_key=${TMDB_API_KEY}&language=en-US&external_source=imdb_id`);
+            if (tmdbResponse.data.movie_results.length > 0 && tmdbResponse.data.movie_results[0].poster_path) {
+              movie.Poster = `https://image.tmdb.org/t/p/w500${tmdbResponse.data.movie_results[0].poster_path}`;
+            } else {
+              movie.Poster = 'NOT_FOUND';
+            }
+          }
+          return movie;
+        }
+      } catch (error) {
+        console.error(`Error al obtener la película: ${title}`, error.message);
+      }
+      return null;
+    });
+
+    const movies = (await Promise.all(moviePromises)).filter(movie => movie !== null);
+    res.json(movies);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Configuración del límite de solicitudes
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
