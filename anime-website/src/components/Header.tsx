@@ -27,7 +27,7 @@ const Header: React.FC = () => {
           <span className="logo-text">MovieStream</span>
         </Link>
         <nav className="main-nav">
-          <ul style={{ display: 'flex', listStyle: 'none', padding: 0, margin: 0 }}>
+          <ul>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/premieres">Estrenos</Link></li>
             <li><Link to="/about">Acerca de</Link></li>
