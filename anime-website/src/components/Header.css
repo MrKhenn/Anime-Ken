@@ -31,16 +31,26 @@
   font-weight: bold;
 }
 
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 .main-nav a {
   color: #E0E0E0;
   text-decoration: none;
   margin-right: 12px;
   font-size: 0.9em;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
 .main-nav a:hover, .main-nav a:focus {
   color: #C04040; /* Lighter wine-red for hover, from theme */
-  text-decoration: underline;
+  background-color: #2C2C2C;
 }
 
 .search-bar {
