@@ -67,7 +67,17 @@ app.post('/api/movies', async (req, res, next) => {
             if (tmdbResponse.data.movie_results.length > 0 && tmdbResponse.data.movie_results[0].poster_path) {
               movie.Poster = `https://image.tmdb.org/t/p/w500${tmdbResponse.data.movie_results[0].poster_path}`;
             } else {
-              movie.Poster = 'NOT_FOUND';
+              try {
+                const posterApiResponse = await axios.get(`http://localhost:5001/get-poster?title=${encodeURIComponent(title)}`);
+                if (posterApiResponse.data.poster_url) {
+                  movie.Poster = posterApiResponse.data.poster_url;
+                } else {
+                  movie.Poster = 'NOT_FOUND';
+                }
+              } catch (posterApiError) {
+                console.error(`Error fetching poster from Python API for ${title}:`, posterApiError.message);
+                movie.Poster = 'NOT_FOUND';
+              }
             }
           }
           return movie;
