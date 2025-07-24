@@ -22,6 +22,12 @@ const HeroCarousel: React.FC = () => {
 
   useEffect(() => {
     const fetchRandomMovies = async () => {
+      // Evita hacer la solicitud de nuevo si ya tenemos las películas
+      if (movies.length > 0) {
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       setError(null);
       try {
@@ -48,7 +54,7 @@ const HeroCarousel: React.FC = () => {
     };
 
     fetchRandomMovies();
-  }, []);
+  }, [movies.length]); // Añade movies.length como dependencia
 
   if (loading) return <p>Loading carousel...</p>;
   if (error) return <p>Error loading carousel: {error}</p>;
