@@ -8,6 +8,8 @@ import MovieFilter from './components/MovieFilter';
 import GenreButtons from './components/GenreButtons';
 import { shuffleArray } from './utils/helpers';
 import { Anime } from './components/AnimeCard';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import DetailPage from './pages/DetailPage';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState('home');
@@ -88,43 +90,48 @@ const App: React.FC = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans">
-      <LayoutHeader onSearch={handleSearch} onLogin={handleLogin} onNavigate={handleNavigate} />
+    <Router>
+      <div className="min-h-screen bg-black text-white font-sans">
+        <LayoutHeader onSearch={handleSearch} onLogin={handleLogin} onNavigate={handleNavigate} />
 
-      <main className="pt-0">
-        {currentPage === 'home' && (
-          <>
-            <MovieCarousel movies={shuffledPopularMovies} />
-            <InvisibleLabel text="Sección de películas populares" />
-            <MovieGrid movies={shuffledGridMovies} />
-          </>
-        )}
-        {currentPage === 'movies' && (
-          <div className="container mx-auto px-4 py-8">
-            <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Todas las Películas</h2>
-            <MovieFilter onFilterChange={handleFilterChange} currentFilter={selectedGenre} />
-            <MovieGrid movies={filteredMovies} />
-          </div>
-        )}
-        {currentPage === 'series' && (
-          <div className="container mx-auto px-4 py-8">
-            <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Próximamente: Series</h2>
-            <MovieFilter onFilterChange={handleFilterChange} currentFilter={selectedGenre} />
-            <p className="text-center text-gray-400 mt-4">¡Estamos trabajando en ello! Vuelve pronto para ver nuestras series.</p>
-            <MovieGrid movies={filteredMovies.filter(movie => (movie.Type || '').includes('series'))} />
-          </div>
-        )}
-        {currentPage === 'genres' && (
-          <div className="container mx-auto px-4 py-8">
-            <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Explorar Géneros</h2>
-            <GenreButtons genres={allGenres} onSelectGenre={handleFilterChange} selectedGenre={selectedGenre} />
-            <MovieGrid movies={filteredMovies} />
-          </div>
-        )}
-      </main>
+        <main className="pt-0">
+          <Routes>
+            <Route path="/" element={
+              <>
+                <MovieCarousel movies={shuffledPopularMovies} />
+                <InvisibleLabel text="Sección de películas populares" />
+                <MovieGrid movies={shuffledGridMovies} />
+              </>
+            } />
+            <Route path="/movies" element={
+              <div className="container mx-auto px-4 py-8">
+                <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Todas las Películas</h2>
+                <MovieFilter onFilterChange={handleFilterChange} currentFilter={selectedGenre} />
+                <MovieGrid movies={filteredMovies} />
+              </div>
+            } />
+            <Route path="/series" element={
+              <div className="container mx-auto px-4 py-8">
+                <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Próximamente: Series</h2>
+                <MovieFilter onFilterChange={handleFilterChange} currentFilter={selectedGenre} />
+                <p className="text-center text-gray-400 mt-4">¡Estamos trabajando en ello! Vuelve pronto para ver nuestras series.</p>
+                <MovieGrid movies={filteredMovies.filter(movie => (movie.Type || '').includes('series'))} />
+              </div>
+            } />
+            <Route path="/genres" element={
+              <div className="container mx-auto px-4 py-8">
+                <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Explorar Géneros</h2>
+                <GenreButtons genres={allGenres} onSelectGenre={handleFilterChange} selectedGenre={selectedGenre} />
+                <MovieGrid movies={filteredMovies} />
+              </div>
+            } />
+            <Route path="/watch/:imdbID" element={<DetailPage />} />
+          </Routes>
+        </main>
 
-      <LayoutFooter />
-    </div>
+        <LayoutFooter />
+      </div>
+    </Router>
   );
 };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface LayoutHeaderProps {
   onSearch?: (query: string) => void;
@@ -8,20 +9,25 @@ interface LayoutHeaderProps {
 
 const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {}, onLogin = () => {}, onNavigate = () => {} }) => {
   return (
-    <header className="bg-black text-white p-3 border-b border-red-800 shadow-lg"> {/* p-3 para reducir altura */}
+    <header className="bg-black text-white p-2 border-b border-red-800 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
-        <nav className="flex space-x-6">
-          <button onClick={() => onNavigate('home')} className="text-lg font-semibold hover:text-red-600 transition-colors">Inicio</button>
-          <button onClick={() => onNavigate('movies')} className="text-lg font-semibold hover:text-red-600 transition-colors">Películas</button>
-          <button onClick={() => onNavigate('series')} className="text-lg font-semibold hover:text-red-600 transition-colors">Series</button>
-          <button onClick={() => onNavigate('genres')} className="text-lg font-semibold hover:text-red-600 transition-colors">Géneros</button>
-        </nav>
         <div className="flex items-center space-x-4">
+          <Link to="/" className="text-2xl font-bold text-red-600">
+            LOGO
+          </Link>
+          <nav className="hidden md:flex space-x-4">
+            <Link to="/" className="text-md font-semibold hover:text-red-600 transition-colors">Inicio</Link>
+            <Link to="/movies" className="text-md font-semibold hover:text-red-600 transition-colors">Películas</Link>
+            <Link to="/series" className="text-md font-semibold hover:text-red-600 transition-colors">Series</Link>
+            <Link to="/genres" className="text-md font-semibold hover:text-red-600 transition-colors">Géneros</Link>
+          </nav>
+        </div>
+        <div className="flex items-center space-x-2">
           <div className="relative">
             <input
               type="text"
               placeholder="Buscar..."
-              className="bg-gray-900 text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-600 transition-all duration-300 w-48 md:w-64"
+              className="bg-gray-900 text-white px-3 py-1 rounded-full focus:outline-none focus:ring-2 focus:ring-red-600 transition-all duration-300 w-32 md:w-48"
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   onSearch(e.currentTarget.value);
@@ -29,10 +35,8 @@ const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {}, onLogi
               }}
             />
             <svg
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -44,12 +48,10 @@ const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {}, onLogi
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </div>
-          <button onClick={onLogin} className="p-2 rounded-full hover:bg-red-800 transition-colors">
+          <button onClick={onLogin} className="p-1 rounded-full hover:bg-red-800 transition-colors">
             <svg
-              className="w-6 h-6 text-white"
+              className="w-5 h-5 text-white"
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
