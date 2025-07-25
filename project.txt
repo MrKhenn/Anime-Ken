@@ -1,0 +1,717 @@
+//ESTRUCTURA FRONT:
+(project -> package.json, postcss.config.js, tailwind.config.js, src (carpeta), public (carpeta).
+project -> src-> app.js, index.js, styles.css, components (carpeta), mock (carpeta), utils (carpeta).
+project -> public-> index.html)
+
+(package.json:({
+      "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+      },
+      "dependencies": {
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "react-scripts": "^5.0.0",
+        "postcss": "^8",
+        "tailwindcss": "^3.4.1",
+        "autoprefixer": "^10.0.0",
+        "tailwind-merge": "^2.4.0",
+        "tailwindcss-animate": "^1.0.7"
+      },
+      "main": "/index.js",
+      "devDependencies": {},
+      "browserslist": {
+        "production": [
+          ">0.2%",
+          "not dead",
+          "not op_mini all"
+        ],
+        "development": [
+          "last 1 chrome version",
+          "last 1 firefox version",
+          "last 1 safari version"
+        ]
+      }
+    }))
+
+    (postcss.config.js:(/** @type {import('postcss-load-config').Config} */
+const config = {
+      plugins: {
+        tailwindcss: {},
+      },
+    };
+
+    export default config))
+
+    (tailwind.config.js:(/** @type {import('tailwindcss').Config} */
+      module.exports = {
+        content: [
+          "./src/**/*.{js,jsx,ts,tsx}",
+        ],
+        theme: {
+          extend: {},
+        },
+        plugins: [],
+      }))
+
+(App.js:(import React, { useState, useEffect, useMemo } from 'react';
+import LayoutHeader from './components/LayoutHeader';
+import MovieCarousel from './components/MovieCarousel';
+import MovieGrid from './components/MovieGrid';
+import LayoutFooter from './components/LayoutFooter';
+import InvisibleLabel from './components/InvisibleLabel';
+import MovieFilter from './components/MovieFilter';
+import GenreButtons from './components/GenreButtons';
+import { defaultMovies } from './mock/movies';
+import { shuffleArray } from './utils/helpers';
+
+const App = () => {
+  const [currentPage, setCurrentPage] = useState('home');
+  const [shuffledPopularMovies, setShuffledPopularMovies] = useState([]);
+  const [shuffledGridMovies, setShuffledGridMovies] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState('');
+
+  useEffect(() => {
+    setShuffledPopularMovies(shuffleArray(defaultMovies).slice(0, 5));
+    setShuffledGridMovies(shuffleArray(defaultMovies).slice(0, 30));
+  }, []);
+
+  const handleSearch = (query = '') => {
+    console.log('Buscando:', query);
+    // Aquí iría la lógica para filtrar películas o navegar a una página de resultados
+  };
+
+  const handleLogin = () => {
+    console.log('Iniciar sesión clickeado');
+    // Aquí iría la lógica para mostrar un modal de inicio de sesión
+  };
+
+  const handleNavigate = (page = 'home') => {
+    setCurrentPage(page);
+    setSelectedGenre(''); // Reset filter when navigating
+    console.log('Navegando a:', page);
+  };
+
+  const handleFilterChange = (genre = '') => {
+    setSelectedGenre(genre);
+  };
+
+  const allGenres = useMemo(() => {
+    const genres = new Set();
+    defaultMovies.forEach(movie => {
+      movie.genre.split(', ').forEach(g => genres.add(g));
+    });
+    return Array.from(genres).sort();
+  }, []);
+
+  const filteredMovies = useMemo(() => {
+    if (!selectedGenre) {
+      return defaultMovies;
+    }
+    return defaultMovies.filter(movie => movie.genre.includes(selectedGenre));
+  }, [selectedGenre]);
+
+  return (
+    <div className="min-h-screen bg-black text-white font-sans">
+      <LayoutHeader onSearch={handleSearch} onLogin={handleLogin} onNavigate={handleNavigate} />
+
+      <main className="pt-0">
+        {currentPage === 'home' && (
+          <>
+            <MovieCarousel movies={shuffledPopularMovies} />
+            <InvisibleLabel text="Sección de películas populares" />
+            <MovieGrid movies={shuffledGridMovies} />
+          </>
+        )}
+        {currentPage === 'movies' && (
+          <div className="container mx-auto px-4 py-8">
+            <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Todas las Películas</h2>
+            <MovieFilter onFilterChange={handleFilterChange} currentFilter={selectedGenre} />
+            <MovieGrid movies={filteredMovies} />
+          </div>
+        )}
+        {currentPage === 'series' && (
+          <div className="container mx-auto px-4 py-8">
+            <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Próximamente: Series</h2>
+            <MovieFilter onFilterChange={handleFilterChange} currentFilter={selectedGenre} />
+            <p className="text-center text-gray-400 mt-4">¡Estamos trabajando en ello! Vuelve pronto para ver nuestras series.</p>
+            <MovieGrid movies={filteredMovies.filter(movie => movie.genre.includes('Drama'))} /> {/* Ejemplo de filtro para series */}
+          </div>
+        )}
+        {currentPage === 'genres' && (
+          <div className="container mx-auto px-4 py-8">
+            <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Explorar Géneros</h2>
+            <GenreButtons genres={allGenres} onSelectGenre={handleFilterChange} selectedGenre={selectedGenre} />
+            <MovieGrid movies={filteredMovies} />
+          </div>
+        )}
+      </main>
+
+      <LayoutFooter />
+    </div>
+  );
+};
+
+export default App;))
+
+(index.js: (import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./styles.css";
+
+import App from "./App";
+
+const root = createRoot(document.getElementById("root"));
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);))
+
+(styles.css: (@tailwind base;
+@tailwind components;
+@tailwind utilities;))
+
+(GenreButtons.js: (import React from 'react';
+
+const GenreButtons = ({ genres = [], onSelectGenre = () => {}, selectedGenre = '' }) => {
+  return (
+    <div className="mb-8 flex flex-wrap gap-3 justify-center">
+      <button
+        onClick={() => onSelectGenre('')}
+        className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+          selectedGenre === ''
+            ? 'bg-red-600 text-white shadow-lg'
+            : 'bg-gray-800 text-gray-300 hover:bg-red-800 hover:text-white'
+        }`}
+      >
+        Todos
+      </button>
+      {genres.map((genre) => (
+        <button
+          key={genre}
+          onClick={() => onSelectGenre(genre)}
+          className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+            selectedGenre === genre
+              ? 'bg-red-600 text-white shadow-lg'
+              : 'bg-gray-800 text-gray-300 hover:bg-red-800 hover:text-white'
+          }`}
+        >
+          {genre}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default GenreButtons;))
+
+(InvisibleLabel.js:(import React from 'react';
+
+const InvisibleLabel = ({ text = "Espacio Reducido" }) => {
+  return (
+    <div className="sr-only">
+      {text}
+    </div>
+  );
+};
+
+export default InvisibleLabel;))
+
+(LayoutFooter.js: (import React from 'react';
+
+const LayoutFooter = ({ copyrightText = 'CineSangre © 2023. Todos los derechos reservados.' }) => {
+  return (
+    <footer className="bg-black text-gray-400 py-6 border-t border-red-800 shadow-inner">
+      <div className="container mx-auto text-center text-sm">
+        <p>{copyrightText}</p>
+        <div className="flex justify-center space-x-4 mt-2">
+          <a href="#" className="hover:text-red-600 transition-colors">Privacidad</a>
+          <a href="#" className="hover:text-red-600 transition-colors">Términos</a>
+          <a href="#" className="hover:text-red-600 transition-colors">Contacto</a>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default LayoutFooter;))
+
+(LayoutHeader.js: (import React from 'react';
+
+const LayoutHeader = ({ onSearch = () => {}, onLogin = () => {}, onNavigate = () => {} }) => {
+  return (
+    <header className="bg-black text-white p-3 border-b border-red-800 shadow-lg"> {/* p-3 para reducir altura */}
+      <div className="container mx-auto flex justify-between items-center">
+        <nav className="flex space-x-6">
+          <button onClick={() => onNavigate('home')} className="text-lg font-semibold hover:text-red-600 transition-colors">Inicio</button>
+          <button onClick={() => onNavigate('movies')} className="text-lg font-semibold hover:text-red-600 transition-colors">Películas</button>
+          <button onClick={() => onNavigate('series')} className="text-lg font-semibold hover:text-red-600 transition-colors">Series</button>
+          <button onClick={() => onNavigate('genres')} className="text-lg font-semibold hover:text-red-600 transition-colors">Géneros</button>
+        </nav>
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Buscar..."
+              className="bg-gray-900 text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-600 transition-all duration-300 w-48 md:w-64"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  onSearch(e.target.value);
+                }
+              }}
+            />
+            <svg
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <button onClick={onLogin} className="p-2 rounded-full hover:bg-red-800 transition-colors">
+            <svg
+              className="w-6 h-6 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default LayoutHeader;))
+
+(MovieCarousel: (import React, { useState, useEffect, useCallback } from 'react';
+
+const MovieCarousel = ({ movies = [] }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length);
+  }, [movies.length]);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + movies.length) % movies.length);
+  }, [movies.length]);
+
+  const goToSlide = useCallback((slideIndex) => {
+    setCurrentIndex(slideIndex);
+  }, []);
+
+  // Auto-play functionality (optional, removed for manual navigation focus)
+  // useEffect(() => {
+  //   const interval = setInterval(goToNext, 3000);
+  //   return () => clearInterval(interval);
+  // }, [goToNext]);
+
+  if (movies.length === 0) {
+    return <div className="text-white text-center py-8">No hay películas para mostrar en el carrusel.</div>;
+  }
+
+  return (
+    <div className="relative w-full overflow-hidden bg-black py-8">
+      <div className="relative h-[500px] md:h-[600px] lg:h-[700px]"> {/* Altura fija para el carrusel */}
+        {movies.map((movie, index) => (
+          <div
+            key={movie.id}
+            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+              index === currentIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <img
+              src={movie.imageUrl}
+              alt={movie.title}
+              className="w-full h-full object-cover" // La imagen ocupa todo el espacio
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex items-end p-8">
+              <h3 className="text-white text-4xl md:text-5xl font-bold drop-shadow-lg">{movie.title}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={goToPrevious}
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-red-800 p-3 rounded-full shadow-lg hover:bg-red-600 transition-colors z-10"
+      >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+      </button>
+      <button
+        onClick={goToNext}
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-red-800 p-3 rounded-full shadow-lg hover:bg-red-600 transition-colors z-10"
+      >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+      </button>
+
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+        {movies.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+              index === currentIndex ? 'bg-red-600' : 'bg-gray-600 hover:bg-gray-400'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          ></button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default MovieCarousel;))
+
+(MovieFilter.js:(import React from 'react';
+
+const MovieFilter = ({ onFilterChange = () => {}, currentFilter = '' }) => {
+  return (
+    <div className="mb-8">
+      <label htmlFor="genre-filter" className="block text-gray-300 text-lg font-semibold mb-2">Filtrar por Género:</label>
+      <select
+        id="genre-filter"
+        className="w-full md:w-1/3 bg-gray-900 text-white px-4 py-2 rounded-lg border border-red-800 focus:outline-none focus:ring-2 focus:ring-red-600 transition-all duration-300"
+        onChange={(e) => onFilterChange(e.target.value)}
+        value={currentFilter}
+      >
+        <option value="">Todos los Géneros</option>
+        <option value="Acción">Acción</option>
+        <option value="Aventura">Aventura</option>
+        <option value="Animación">Animación</option>
+        <option value="Biografía">Biografía</option>
+        <option value="Ciencia ficción">Ciencia ficción</option>
+        <option value="Comedia">Comedia</option>
+        <option value="Crimen">Crimen</option>
+        <option value="Drama">Drama</option>
+        <option value="Familia">Familia</option>
+        <option value="Fantasía">Fantasía</option>
+        <option value="Historia">Historia</option>
+        <option value="Música">Música</option>
+        <option value="Romance">Romance</option>
+        <option value="Thriller">Thriller</option>
+        <option value="Western">Western</option>
+      </select>
+    </div>
+  );
+};
+
+export default MovieFilter;))
+
+(MovieGrid.js:(import React from 'react';
+
+const MovieGrid = ({ movies = [] }) => {
+  return (
+    <div className="container mx-auto py-8 px-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+        {movies.map((movie) => (
+          <div key={movie.id} className="relative group rounded-lg overflow-hidden shadow-xl border border-red-900 hover:border-red-600 transition-all duration-300 transform hover:scale-105">
+            <img
+              src={movie.imageUrl}
+              alt={movie.title}
+              className="w-full h-72 object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <div className="text-white">
+                <h3 className="text-lg font-bold">{movie.title}</h3>
+                <p className="text-sm text-gray-300">{movie.year} | {movie.genre}</p>
+                <div className="flex items-center mt-1">
+                  <svg className="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.538 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.783.57-1.838-.197-1.538-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.92 8.729c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path></svg>
+                  <span className="text-sm font-semibold">{movie.rating}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default MovieGrid;))
+
+(movies.js:(export const defaultMovies = [
+  {
+    id: 1,
+    title: "El Padrino",
+    genre: "Crimen, Drama",
+    year: 1972,
+    rating: 9.2,
+    imageUrl: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1PhCaJG.jpg",
+  },
+  {
+    id: 2,
+    title: "Cadena Perpetua",
+    genre: "Drama",
+    year: 1994,
+    rating: 9.3,
+    imageUrl: "https://image.tmdb.org/t/p/w500/q6y0ETtdGw5TQE0DGzJsFg2Fad3.jpg",
+  },
+  {
+    id: 3,
+    title: "La Lista de Schindler",
+    genre: "Biografía, Drama, Historia",
+    year: 1993,
+    rating: 8.9,
+    imageUrl: "https://image.tmdb.org/t/p/w500/sF1U4EW87RbMm3Yuzc4Ffu4cf5S.jpg",
+  },
+  {
+    id: 4,
+    title: "Pulp Fiction",
+    genre: "Crimen, Drama",
+    year: 1994,
+    rating: 8.9,
+    imageUrl: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+  },
+  {
+    id: 5,
+    title: "El Señor de los Anillos: El Retorno del Rey",
+    genre: "Aventura, Drama, Fantasía",
+    year: 2003,
+    rating: 8.9,
+    imageUrl: "https://image.tmdb.org/t/p/w500/rCzpzMThs0A6B6AHJ6UsA1g1C9I.jpg",
+  },
+  {
+    id: 6,
+    title: "El bueno, el feo y el malo",
+    genre: "Western",
+    year: 1966,
+    rating: 8.8,
+    imageUrl: "https://image.tmdb.org/t/p/w500/bX2xnavhMYjWDoZp1VM6Vn66bC4.jpg",
+  },
+  {
+    id: 7,
+    title: "El Caballero Oscuro",
+    genre: "Acción, Crimen, Drama",
+    year: 2008,
+    rating: 9.0,
+    imageUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911JEWPzYSDyP5p.jpg",
+  },
+  {
+    id: 8,
+    title: "12 Hombres sin Piedad",
+    genre: "Drama",
+    year: 1957,
+    rating: 9.0,
+    imageUrl: "https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7zrygskgCgvkX.jpg",
+  },
+  {
+    id: 9,
+    title: "La Lista de Schindler",
+    genre: "Biografía, Drama, Historia",
+    year: 1993,
+    rating: 8.9,
+    imageUrl: "https://image.tmdb.org/t/p/w500/sF1U4EW87RbMm3Yuzc4Ffu4cf5S.jpg",
+  },
+  {
+    id: 10,
+    title: "El Señor de los Anillos: La Comunidad del Anillo",
+    genre: "Aventura, Fantasía",
+    year: 2001,
+    rating: 8.8,
+    imageUrl: "https://image.tmdb.org/t/p/w500/6oom5QYQyQyQyQyQyQyQyQyQyQyQyQyQ.jpg",
+  },
+  {
+    id: 11,
+    title: "Forrest Gump",
+    genre: "Comedia, Drama, Romance",
+    year: 1994,
+    rating: 8.8,
+    imageUrl: "https://image.tmdb.org/t/p/w500/h5wGMzY1b2g2g2g2g2g2g2g2g2g2g2g2g.jpg",
+  },
+  {
+    id: 12,
+    title: "Origen",
+    genre: "Acción, Aventura, Ciencia ficción",
+    year: 2010,
+    rating: 8.8,
+    imageUrl: "https://image.tmdb.org/t/p/w500/oYuEqgXy2g2g2g2g2g2g2g2g2g2g2g2g.jpg",
+  },
+  {
+    id: 13,
+    title: "El Señor de los Anillos: Las Dos Torres",
+    genre: "Aventura, Fantasía",
+    year: 2002,
+    rating: 8.7,
+    imageUrl: "https://image.tmdb.org/t/p/w500/rCzpzMThs0A6B6AHJ6UsA1g1C9I.jpg",
+  },
+  {
+    id: 14,
+    title: "El Club de la Lucha",
+    genre: "Drama",
+    year: 1999,
+    rating: 8.8,
+    imageUrl: "https://image.tmdb.org/t/p/w500/a2oZl2g2g2g2g2g2g2g2g2g2g2g2g2g2g.jpg",
+  },
+  {
+    id: 15,
+    title: "Matrix",
+    genre: "Acción, Ciencia ficción",
+    year: 1999,
+    rating: 8.7,
+    imageUrl: "https://image.tmdb.org/t/p/w500/f8g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g.jpg",
+  },
+  {
+    id: 16,
+    title: "Gladiator",
+    genre: "Acción, Aventura, Drama",
+    year: 2000,
+    rating: 8.7,
+    imageUrl: "https://image.tmdb.org/t/p/w500/oYuEqgXy2g2g2g2g2g2g2g2g2g2g2g2g.jpg",
+  },
+  {
+    id: 17,
+    title: "Interstellar",
+    genre: "Aventura, Drama, Ciencia ficción",
+    year: 2014,
+    rating: 8.7,
+    imageUrl: "https://image.tmdb.org/t/p/w500/g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g.jpg",
+  },
+  {
+    id: 18,
+    title: "El Rey León",
+    genre: "Animación, Aventura, Drama",
+    year: 1994,
+    rating: 8.5,
+    imageUrl: "https://image.tmdb.org/t/p/w500/rCzpzMThs0A6B6AHJ6UsA1g1C9I.jpg",
+  },
+  {
+    id: 19,
+    title: "El Profesional (Léon)",
+    genre: "Crimen, Drama, Thriller",
+    year: 1994,
+    rating: 8.5,
+    imageUrl: "https://image.tmdb.org/t/p/w500/sF1U4EW87RbMm3Yuzc4Ffu4cf5S.jpg",
+  },
+  {
+    id: 20,
+    title: "El Pianista",
+    genre: "Biografía, Drama, Música",
+    year: 2002,
+    rating: 8.5,
+    imageUrl: "https://image.tmdb.org/t/p/w500/q6y0ETtdGw5TQE0DGzJsFg2Fad3.jpg",
+  },
+  {
+    id: 21,
+    title: "Parásitos",
+    genre: "Comedia, Drama, Thriller",
+    year: 2019,
+    rating: 8.6,
+    imageUrl: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1PhCaJG.jpg",
+  },
+  {
+    id: 22,
+    title: "Whiplash",
+    genre: "Drama, Música",
+    year: 2014,
+    rating: 8.5,
+    imageUrl: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+  },
+  {
+    id: 23,
+    title: "Intocable",
+    genre: "Biografía, Comedia, Drama",
+    year: 2011,
+    rating: 8.5,
+    imageUrl: "https://image.tmdb.org/t/p/w500/bX2xnavhMYjWDoZp1VM6Vn66bC4.jpg",
+  },
+  {
+    id: 24,
+    title: "La Vida es Bella",
+    genre: "Comedia, Drama, Romance",
+    year: 1997,
+    rating: 8.6,
+    imageUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911JEWPzYSDyP5p.jpg",
+  },
+  {
+    id: 25,
+    title: "El Viaje de Chihiro",
+    genre: "Animación, Aventura, Familia",
+    year: 2001,
+    rating: 8.6,
+    imageUrl: "https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7zrygskgCgvkX.jpg",
+  },
+  {
+    id: 26,
+    title: "Regreso al Futuro",
+    genre: "Aventura, Comedia, Ciencia ficción",
+    year: 1985,
+    rating: 8.5,
+    imageUrl: "https://image.tmdb.org/t/p/w500/6oom5QYQyQyQyQyQyQyQyQyQyQyQyQyQ.jpg",
+  },
+  {
+    id: 27,
+    title: "Spider-Man: Un Nuevo Universo",
+    genre: "Animación, Acción, Aventura",
+    year: 2018,
+    rating: 8.4,
+    imageUrl: "https://image.tmdb.org/t/p/w500/h5wGMzY1b2g2g2g2g2g2g2g2g2g2g2g2g.jpg",
+  },
+  {
+    id: 28,
+    title: "Coco",
+    genre: "Animación, Aventura, Familia",
+    year: 2017,
+    rating: 8.4,
+    imageUrl: "https://image.tmdb.org/t/p/w500/oYuEqgXy2g2g2g2g2g2g2g2g2g2g2g2g.jpg",
+  },
+  {
+    id: 29,
+    title: "Vengadores: Endgame",
+    genre: "Acción, Aventura, Ciencia ficción",
+    year: 2019,
+    rating: 8.4,
+    imageUrl: "https://image.tmdb.org/t/p/w500/rCzpzMThs0A6B6AHJ6UsA1g1C9I.jpg",
+  },
+  {
+    id: 30,
+    title: "El Gran Hotel Budapest",
+    genre: "Aventura, Comedia, Drama",
+    year: 2014,
+    rating: 8.1,
+    imageUrl: "https://image.tmdb.org/t/p/w500/a2oZl2g2g2g2g2g2g2g2g2g2g2g2g2g2g.jpg",
+  },
+];))
+
+(helpers.js:(export const shuffleArray = (array = []) => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};))
+
+(index.html:(<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>))
+//
