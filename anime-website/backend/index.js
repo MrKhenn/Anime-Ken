@@ -48,16 +48,21 @@ app.use('/api/', limiter); // Aplica el limitador de velocidad a todas las rutas
 // Middleware para parsear JSON en el cuerpo de las solicitudes
 app.use(express.json());
 
-// Nuevo endpoint para obtener múltiples películas
-app.post('/api/movies', async (req, res, next) => {
-  const { titles } = req.body;
-
-  if (!titles || !Array.isArray(titles) || titles.length === 0) {
-    return res.status(400).json({ error: 'Se requiere un array de títulos.' });
-  }
-
+// Nuevo endpoint para obtener películas populares
+app.get('/api/movies/popular', async (req, res, next) => {
   try {
-    const moviePromises = titles.map(async (title) => {
+    // Aquí puedes definir una lista de películas populares o obtenerlas de alguna fuente
+    const popularTitles = [
+      'Inception', 'The Matrix', 'Interstellar', 'The Dark Knight', 'Pulp Fiction',
+      'Forrest Gump', 'The Lord of the Rings: The Fellowship of the Ring', 'Fight Club',
+      'Goodfellas', 'The Shawshank Redemption', 'The Godfather', 'Star Wars: Episode V - The Empire Strikes Back',
+      'The Silence of the Lambs', 'Saving Private Ryan', 'Gladiator', 'The Departed',
+      'The Prestige', 'Whiplash', 'The Lion King', 'Back to the Future', 'Parasite',
+      'Joker', 'Avengers: Endgame', 'Spider-Man: Into the Spider-Verse', 'Coco',
+      'Your Name.', 'A Silent Voice', 'Spirited Away', 'Princess Mononoke', 'My Neighbor Totoro'
+    ];
+
+    const moviePromises = popularTitles.map(async (title) => {
       try {
         const omdbResponse = await axios.get(`${OMDb_BASE_URL}?t=${encodeURIComponent(title)}&apikey=${OMDb_API_KEY}`);
         if (omdbResponse.data.Response === 'True') {
