@@ -1,4 +1,5 @@
 import React from 'react';
+import Swal from 'sweetalert2';
 import { Anime } from './AnimeCard';
 
 interface MovieGridProps {
@@ -6,11 +7,26 @@ interface MovieGridProps {
 }
 
 const MovieGrid: React.FC<MovieGridProps> = ({ movies = [] }) => {
+  const handleWatchNow = (imdbID: string) => {
+    Swal.fire({
+      title: '¿Ver ahora?',
+      text: 'Serás redirigido a la página de detalles de la película.',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, ver ahora',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/watch/${imdbID}`;
+      }
+    });
+  };
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
         {movies.map((movie) => (
-          <div key={movie.imdbID} className="relative group rounded-lg overflow-hidden shadow-xl border border-red-900 hover:border-red-600 transition-all duration-300 transform hover:scale-105">
+          <div key={movie.imdbID} className="relative group rounded-lg overflow-hidden shadow-xl border border-red-900 hover:border-red-600 transition-all duration-300 transform hover:scale-105" onClick={() => handleWatchNow(movie.imdbID)}>
             <img
               src={movie.Poster}
               alt={movie.Title}

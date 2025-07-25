@@ -24,6 +24,16 @@ const App: React.FC = () => {
     const fetchMovies = async () => {
       setLoading(true);
       setError(null);
+
+      const cachedMovies = getCachedMovies();
+      if (cachedMovies) {
+        setMovies(cachedMovies);
+        setShuffledPopularMovies(shuffleArray(cachedMovies).slice(0, 5));
+        setShuffledGridMovies(shuffleArray(cachedMovies).slice(0, 30));
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch(`http://localhost:5000/api/movies/popular`);
         const data = await response.json();
@@ -32,10 +42,12 @@ const App: React.FC = () => {
           setMovies(moviesArray);
           setShuffledPopularMovies(shuffleArray(moviesArray).slice(0, 5));
           setShuffledGridMovies(shuffleArray(moviesArray).slice(0, 30));
+          cacheMovies(moviesArray);
         } else if (Array.isArray(data)) {
           setMovies(data);
           setShuffledPopularMovies(shuffleArray(data).slice(0, 5));
           setShuffledGridMovies(shuffleArray(data).slice(0, 30));
+          cacheMovies(data);
         }
         else {
           setMovies([]);
