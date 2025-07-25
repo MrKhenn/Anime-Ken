@@ -10,9 +10,10 @@ import { shuffleArray } from './utils/helpers';
 import { Anime } from './components/AnimeCard';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DetailPage from './pages/DetailPage';
+import { getCachedMovies, cacheMovies } from './services/cacheService';
 
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [, setCurrentPage] = useState('home');
   const [movies, setMovies] = useState<Anime[]>([]);
   const [shuffledPopularMovies, setShuffledPopularMovies] = useState<Anime[]>([]);
   const [shuffledGridMovies, setShuffledGridMovies] = useState<Anime[]>([]);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { Carousel } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { Anime } from './AnimeCard';
