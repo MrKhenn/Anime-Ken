@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { OMDb_API_KEY, OMDb_BASE_URL } from '../apiConfig';
 import { getCache, setCache } from '../services/cacheService';
 import './AnimeDetail.css';
 

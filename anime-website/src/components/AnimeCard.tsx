@@ -1,7 +1,6 @@
 import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { OMDb_API_KEY } from '../apiConfig';
 import './AnimeCard.css';
 
 export interface Anime {

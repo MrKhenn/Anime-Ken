@@ -40,7 +40,7 @@ const HomePageMovies: React.FC = () => {
     };
 
     fetchMovies();
-  }, []);
+  }, [movieTitles]);
 
   return (
     <div className="anime-list">
