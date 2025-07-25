@@ -25,13 +25,19 @@ const App: React.FC = () => {
       try {
         const response = await fetch(`http://localhost:5000/api/movies/popular`);
         const data = await response.json();
-        if (Array.isArray(data)) {
+        if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
+          const moviesArray = [data];
+          setMovies(moviesArray);
+          setShuffledPopularMovies(shuffleArray(moviesArray).slice(0, 5));
+          setShuffledGridMovies(shuffleArray(moviesArray).slice(0, 30));
+        } else if (Array.isArray(data)) {
           setMovies(data);
           setShuffledPopularMovies(shuffleArray(data).slice(0, 5));
           setShuffledGridMovies(shuffleArray(data).slice(0, 30));
-        } else {
+        }
+        else {
           setMovies([]);
-          setError('La respuesta de la API no es un array.');
+          setError('La respuesta de la API no es un objeto o un array.');
         }
       } catch (err) {
         setError('Failed to fetch movies.');
