@@ -40,15 +40,17 @@ const HomePageMovies: React.FC = () => {
     };
 
     fetchMovies();
-  }, [movieTitles]);
+  }, []);
 
   return (
-    <div className="anime-list">
-      {loading && <p>Loading movies...</p>}
-      {error && <p>Error: {error}</p>}
-      {movies.map(movie => (
-        <AnimeCard key={movie.imdbID} anime={movie} />
-      ))}
+    <div>
+      {loading && <p style={{ textAlign: 'center' }}>Loading movies...</p>}
+      {error && <p style={{ textAlign: 'center', color: 'red' }}>Error: {error}</p>}
+      <div className="anime-list">
+        {movies.map(movie => (
+          <AnimeCard key={movie.imdbID} anime={movie} />
+        ))}
+      </div>
     </div>
   );
 };
