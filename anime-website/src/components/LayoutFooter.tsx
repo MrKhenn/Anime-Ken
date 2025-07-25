@@ -10,9 +10,9 @@ const LayoutFooter: React.FC<LayoutFooterProps> = ({ copyrightText = 'CineSangre
       <div className="container mx-auto text-center text-sm">
         <p>{copyrightText}</p>
         <div className="flex justify-center space-x-4 mt-2">
-          <a href="#" className="hover:text-red-600 transition-colors">Privacidad</a>
-          <a href="#" className="hover:text-red-600 transition-colors">Términos</a>
-          <a href="#" className="hover:text-red-600 transition-colors">Contacto</a>
+          <button className="bg-transparent border-none text-gray-400 hover:text-red-600 transition-colors">Privacidad</button>
+          <button className="bg-transparent border-none text-gray-400 hover:text-red-600 transition-colors">Términos</button>
+          <button className="bg-transparent border-none text-gray-400 hover:text-red-600 transition-colors">Contacto</button>
         </div>
       </div>
     </footer>
