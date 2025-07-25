@@ -56,7 +56,7 @@ const HeroCarousel: React.FC = () => {
   if (error) return <p>Error loading carousel: {error}</p>;
 
   return (
-    <Carousel>
+    <Carousel interval={5000} pause="hover" fade>
       {movies.map(movie => (
         <Carousel.Item key={movie.imdbID}>
           <img
@@ -67,6 +67,9 @@ const HeroCarousel: React.FC = () => {
           <Carousel.Caption className="hero-carousel-caption">
             <h3>{movie.Title}</h3>
             <p>🌟🌟🌟🌟🌟 Digno de Oscar</p>
+            <a href={`/watch/${movie.imdbID}`} className="btn btn-danger btn-lg mt-3">
+              Ver Ahora
+            </a>
           </Carousel.Caption>
         </Carousel.Item>
       ))}
