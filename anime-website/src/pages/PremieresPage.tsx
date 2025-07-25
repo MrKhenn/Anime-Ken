@@ -30,7 +30,16 @@ const PremieresPage: React.FC = () => {
       <h1 style={{ textAlign: 'center' }}>Estrenos 2025</h1>
       <div className="anime-list">
         {movies.map((movie) => (
-          <AnimeCard key={movie.title} movie={{ ...movie, imdbID: movie.title }} />
+          <AnimeCard
+            key={movie.title}
+            anime={{
+              imdbID: movie.title,
+              Title: movie.title,
+              Year: '2025',
+              Poster: movie.poster,
+              imdbRating: 'N/A',
+            }}
+          />
         ))}
       </div>
     </div>
