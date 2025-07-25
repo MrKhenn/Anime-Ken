@@ -1,11 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import AnimeCard from '../components/AnimeCard'; // Assuming AnimeCard can be reused
 
 const PremieresPage: React.FC = () => {
+  const [movies, setMovies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPremieres = async () => {
+      try {
+        const response = await axios.get('/premieres.json');
+        setMovies(response.data);
+      } catch (error) {
+        console.error('Error fetching premieres:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPremieres();
+  }, []);
+
+  if (loading) {
+    return <p>Loading premieres...</p>;
+  }
+
   return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>Estrenos</h1>
-      <p>¡Próximamente aquí encontrarás los últimos estrenos!</p>
-      {/* This page would typically list new anime releases */}
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ textAlign: 'center' }}>Estrenos 2025</h1>
+      <div className="anime-list">
+        {movies.map((movie) => (
+          <AnimeCard key={movie.title} movie={{ ...movie, imdbID: movie.title }} />
+        ))}
+      </div>
     </div>
   );
 };
