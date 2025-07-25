@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import AnimeCard from '../components/AnimeCard'; // Assuming AnimeCard can be reused
 
 const PremieresPage: React.FC = () => {
@@ -9,8 +8,9 @@ const PremieresPage: React.FC = () => {
   useEffect(() => {
     const fetchPremieres = async () => {
       try {
-        const response = await axios.get('/premieres.json');
-        setMovies(response.data);
+        const response = await fetch('/premieres.json');
+        const data = await response.json();
+        setMovies(data);
       } catch (error) {
         console.error('Error fetching premieres:', error);
       } finally {
