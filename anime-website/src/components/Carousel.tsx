@@ -30,7 +30,8 @@ const Carousel: React.FC<Props> = ({
       fade={fade}
       indicators={indicators}
       controls={controls}
-      style={{ maxHeight: height }}
+      style={{ height: `${height}px` }}
+      className="shadow-lg"
     >
       {slides.map((s) => (
         <BCarousel.Item key={s.id}>
@@ -38,9 +39,9 @@ const Carousel: React.FC<Props> = ({
             src={s.src}
             alt={s.alt}
             fluid
-            style={{ width: '100%', height, objectFit: 'cover' }}
+            style={{ width: '100%', height, objectFit: 'cover', transition: 'transform 0.3s ease-in-out' }}
             onClick={() => s.link && window.open(s.link, '_blank')}
-            className={s.link ? 'cursor-pointer' : ''}
+            className={`${s.link ? 'cursor-pointer' : ''} hover-zoom`}
           />
           {(s.caption || s.description) && (
             <BCarousel.Caption>
