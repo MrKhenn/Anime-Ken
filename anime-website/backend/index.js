@@ -67,13 +67,11 @@ app.get('/api/movies/popular', async (req, res, next) => {
         const omdbResponse = await axios.get(`${OMDb_BASE_URL}?t=${encodeURIComponent(title)}&apikey=${OMDb_API_KEY}`);
         if (omdbResponse.data.Response === 'True') {
           let movie = omdbResponse.data;
-          if (movie.Poster === 'N/A') {
-            const tmdbResponse = await axios.get(`${TMDB_BASE_URL}/find/${movie.imdbID}?api_key=${TMDB_API_KEY}&language=en-US&external_source=imdb_id`);
-            if (tmdbResponse.data.movie_results.length > 0 && tmdbResponse.data.movie_results[0].poster_path) {
-              movie.Poster = `https://image.tmdb.org/t/p/w500${tmdbResponse.data.movie_results[0].poster_path}`;
-            } else {
-              movie.Poster = 'NOT_FOUND';
-            }
+          const tmdbResponse = await axios.get(`${TMDB_BASE_URL}/movie/${movie.imdbID}/images?api_key=${TMDB_API_KEY}`);
+          if (tmdbResponse.data.backdrops && tmdbResponse.data.backdrops.length > 0) {
+            movie.backdrop_path = `https://image.tmdb.org/t/p/original${tmdbResponse.data.backdrops[0].file_path}`;
+          } else {
+            movie.backdrop_path = null;
           }
           return movie;
         }

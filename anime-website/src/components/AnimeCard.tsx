@@ -6,4 +6,5 @@ export interface Anime {
   Type: string;
   Genre: string;
   imdbRating: string;
+  backdrop_path: string | null;
 }

@@ -114,7 +114,7 @@ const App: React.FC = () => {
                 <Carousel
                   slides={shuffledPopularMovies.map(movie => ({
                     id: movie.imdbID,
-                    src: movie.Poster,
+                    src: movie.backdrop_path || movie.Poster,
                     alt: movie.Title,
                     caption: movie.Title,
                     description: `Ranking: ${movie.imdbRating} | Categorías: ${movie.Genre}`,
