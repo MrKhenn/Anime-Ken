@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import LayoutHeader from './components/LayoutHeader';
-import MovieCarousel from './components/MovieCarousel';
+import Carousel from './components/Carousel';
 import MovieGrid from './components/MovieGrid';
 import LayoutFooter from './components/LayoutFooter';
 import InvisibleLabel from './components/InvisibleLabel';
@@ -111,7 +111,18 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={
               <>
-                <MovieCarousel movies={shuffledPopularMovies} />
+                <Carousel
+                  slides={shuffledPopularMovies.map(movie => ({
+                    id: movie.imdbID,
+                    src: movie.Poster,
+                    alt: movie.Title,
+                    caption: movie.Title,
+                    description: `Ranking: ${movie.imdbRating} | Categorías: ${movie.Genre}`,
+                    link: `/watch/${movie.imdbID}`
+                  }))}
+                  height={500}
+                  fade
+                />
                 <InvisibleLabel text="Sección de películas populares" />
                 <MovieGrid movies={shuffledGridMovies} />
               </>
