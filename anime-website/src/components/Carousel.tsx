@@ -1,5 +1,6 @@
 import React from 'react';
 import { Carousel as BCarousel, Image } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 export interface CarouselSlide {
   id: string | number;
@@ -25,6 +26,26 @@ const Carousel: React.FC<Props> = ({
   controls = true,
   fade = false,
 }) => {
+  const handleWatchNow = (slide: CarouselSlide) => {
+    Swal.fire({
+      title: slide.caption,
+      imageUrl: slide.src,
+      imageAlt: slide.alt,
+      background: '#000',
+      showCancelButton: true,
+      confirmButtonText: 'Ver ahora',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        title: 'text-white',
+        popup: 'border-2 border-red-600',
+      },
+    }).then((result) => {
+      if (result.isConfirmed && slide.link) {
+        window.location.href = slide.link;
+      }
+    });
+  };
+
   return (
     <BCarousel
       fade={fade}
@@ -40,7 +61,7 @@ const Carousel: React.FC<Props> = ({
             alt={s.alt}
             fluid
             style={{ width: '100%', height, objectFit: 'cover', transition: 'transform 0.3s ease-in-out' }}
-            onClick={() => s.link && window.open(s.link, '_blank')}
+            onClick={() => handleWatchNow(s)}
             className={`${s.link ? 'cursor-pointer' : ''} hover-zoom`}
           />
           {(s.caption || s.description) && (
