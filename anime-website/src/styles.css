@@ -6,8 +6,8 @@
    CARRUSEL – ESTILOS EXTRA
    ========================================= */
 :root {
-  --accent: #8c5bff;
-  --accent-light: #b39ddb;
+  --accent: #dc3545;
+  --accent-light: #f8d7da;
 }
 
 /* 1. Flechas con forma <  y  >  */
@@ -37,6 +37,7 @@
 .carousel-control-prev:hover .carousel-control-prev-icon,
 .carousel-control-next:hover .carousel-control-next-icon {
   transform: scale(1.2);
+  filter: brightness(0.8);
 }
 
 /* 2. Indicadores _ _ _  (en vez de • • •) */
