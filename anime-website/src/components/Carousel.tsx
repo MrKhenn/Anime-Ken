@@ -31,10 +31,10 @@ const Carousel: React.FC<Props> = ({
       indicators={indicators}
       controls={controls}
       style={{ height: `${height}px` }}
-      className="shadow-lg"
+      className="modern-carousel shadow-lg"
     >
       {slides.map((s) => (
-        <BCarousel.Item key={s.id}>
+        <BCarousel.Item key={s.id} className="h-100">
           <Image
             src={s.src}
             alt={s.alt}

@@ -2,6 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================
+   CARRUSEL – ESTILOS EXTRA
+   ========================================= */
+:root {
+  --accent: #8c5bff;
+  --accent-light: #b39ddb;
+}
+
+/* 1. Flechas con forma <  y  >  */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background: none;
+  position: relative;
+  width: 48px;
+  height: 48px;
+  transition: transform .4s cubic-bezier(.25,.8,.25,1);
+}
+.carousel-control-prev-icon::before,
+.carousel-control-next-icon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border-top: 3px solid var(--accent);
+  border-right: 3px solid var(--accent);
+  transform: translate(-50%, -50%) rotate(225deg); /* < */
+}
+.carousel-control-next-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);  /* > */
+}
+.carousel-control-prev:hover .carousel-control-prev-icon,
+.carousel-control-next:hover .carousel-control-next-icon {
+  transform: scale(1.2);
+}
+
+/* 2. Indicadores _ _ _  (en vez de • • •) */
+.carousel-indicators {
+  bottom: 20px;
+}
+.carousel-indicators [data-bs-target] {
+  width: 24px;
+  height: 4px;
+  border: none;
+  margin: 0 6px;
+  background: #e0e0e0;
+  transition: width .3s, background-color .3s;
+}
+.carousel-indicators .active {
+  width: 40px;
+  background: var(--accent);
+}
+
+/* 3. Hover slide-caption */
+.carousel-caption {
+  transition: opacity .5s, transform .5s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.carousel-item:hover .carousel-caption,
+.carousel-item:focus-within .carousel-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .hover-zoom:hover {
   transform: scale(1.05);
 }
