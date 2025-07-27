@@ -4,14 +4,10 @@ import cors from 'cors';
 import NodeCache from 'node-cache';
 import { fetchMovies, fetchSeries } from './helpers.js';
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config();
 
-console.log('OMDB_KEY:', process.env.OMDB_KEY);
-console.log('TMDB_KEY:', process.env.TMDB_KEY);
+console.log('OMDB_API_KEY:', process.env.OMDB_API_KEY);
+console.log('TMDB_API_KEY:', process.env.TMDB_API_KEY);
 
 const app = express();
 const cache = new NodeCache({ stdTTL: 3600 }); // TTL 1h
@@ -30,7 +26,7 @@ app.get('/api/search', async (req, res) => {
 
   try {
     // OMDb
-    const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_KEY}&s=${q}&type=movie`);
+    const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&s=${q}&type=movie`);
     const omdbResults = (omdb.data.Search || []).map(m => ({
       imdbID: m.imdbID,
       title: m.Title,
@@ -39,7 +35,7 @@ app.get('/api/search', async (req, res) => {
     }));
 
     // TMDB (búsqueda + imagen 4K)
-    const tmdb = await axios.get(`${TMDB_URL}/search/movie?api_key=${process.env.TMDB_KEY}&query=${q}&language=es-ES`);
+    const tmdb = await axios.get(`${TMDB_URL}/search/movie?api_key=${process.env.TMDB_API_KEY}&query=${q}&language=es-ES`);
     const tmdbResults = tmdb.data.results.map(m => ({
       tmdbID: m.id,
       imdbID: null, // lo pediremos después

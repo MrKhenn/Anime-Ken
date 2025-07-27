@@ -11,13 +11,13 @@ export async function fetchMovies(page = 1) {
 
   // TMDB – películas populares
   const tmdbRes = await axios.get(`${TMDB_URL}/movie/popular`, {
-    params: { api_key: process.env.TMDB_KEY, page, language: 'es-ES' }
+    params: { api_key: process.env.TMDB_API_KEY, page, language: 'es-ES' }
   });
 
   // OMDb – detalles por cada tmdb movie
   const merged = await Promise.all(
     tmdbRes.data.results.map(async m => {
-      const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_KEY}&i=${m.imdb_id}`);
+      const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${m.imdb_id}`);
       return {
         id: m.id,
         imdbID: omdb.data.imdbID,
@@ -40,13 +40,13 @@ export async function fetchSeries(page = 1) {
 
     // TMDB – series populares
     const tmdbRes = await axios.get(`${TMDB_URL}/tv/popular`, {
-      params: { api_key: process.env.TMDB_KEY, page, language: 'es-ES' }
+      params: { api_key: process.env.TMDB_API_KEY, page, language: 'es-ES' }
     });
 
     // OMDb – detalles por cada tmdb movie
     const merged = await Promise.all(
       tmdbRes.data.results.map(async s => {
-        const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_KEY}&i=${s.imdb_id}`);
+        const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${s.imdb_id}`);
         return {
           id: s.id,
           imdbID: omdb.data.imdbID,
