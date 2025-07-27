@@ -64,9 +64,32 @@ const App: React.FC = () => {
     fetchMovies();
   }, []);
 
-  const handleSearch = (query: string = '') => {
-    console.log('Buscando:', query);
-    // Lógica para filtrar películas o navegar a una página de resultados
+  const handleSearch = async (query: string = '') => {
+    if (!query) return;
+    setLoading(true);
+    setError(null);
+
+    const cacheKey = `search_${query}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      const data = JSON.parse(cached);
+      setMovies(data);
+      setShuffledGridMovies(data);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/search?q=${query}`);
+      const data = await response.json();
+      setMovies(data);
+      setShuffledGridMovies(data);
+      sessionStorage.setItem(cacheKey, JSON.stringify(data));
+    } catch (err) {
+      setError('Failed to fetch search results.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogin = () => {
