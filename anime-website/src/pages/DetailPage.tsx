@@ -4,6 +4,7 @@ import { Anime } from '../components/AnimeCard';
 
 const DetailPage: React.FC = () => {
   const { imdbID } = useParams<{ imdbID: string }>();
+  console.log('imdbID:', imdbID);
   const [movie, setMovie] = useState<Anime | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
