@@ -7,4 +7,8 @@ export interface Anime {
   Genre: string;
   imdbRating: string;
   backdrop_path: string | null;
+  Director: string;
+  Actors: string;
+  Plot: string;
+  trailer: string | null;
 }
