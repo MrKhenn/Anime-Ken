@@ -39,7 +39,7 @@ const MovieGrid: React.FC<MovieGridProps> = ({ movies = [] }) => {
             />
             <div className="overlay">
               <h3>{movie.Title}</h3>
-              <p>{movie.Year} | {movie.Genre.split(',')[0]}</p>
+              <p>{movie.Year} | {(movie.Genre || '').split(',')[0]}</p>
               <p>⭐ {movie.imdbRating}</p>
               <a href={`https://www.imdb.com/title/${movie.imdbID}`} target="_blank" rel="noopener noreferrer">Ver más</a>
             </div>
