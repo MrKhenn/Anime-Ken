@@ -4,8 +4,6 @@ import Carousel from './components/Carousel';
 import MovieGrid from './components/MovieGrid';
 import LayoutFooter from './components/LayoutFooter';
 import InvisibleLabel from './components/InvisibleLabel';
-import MovieFilter from './components/MovieFilter';
-import GenreButtons from './components/GenreButtons';
 import { shuffleArray } from './utils/helpers';
 import { Anime } from './components/AnimeCard';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -106,24 +104,6 @@ const App: React.FC = () => {
     console.log('Navegando a:', page);
   };
 
-  const handleFilterChange = (genre: string = '') => {
-    setSelectedGenre(genre);
-  };
-
-  const allGenres = useMemo(() => {
-    const genres = new Set<string>();
-    movies.forEach(movie => {
-      (movie.Genre || '').split(', ').forEach(g => genres.add(g));
-    });
-    return Array.from(genres).sort();
-  }, [movies]);
-
-  const filteredMovies = useMemo(() => {
-    if (!selectedGenre) {
-      return movies;
-    }
-    return movies.filter(movie => (movie.Genre || '').includes(selectedGenre));
-  }, [selectedGenre, movies]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;

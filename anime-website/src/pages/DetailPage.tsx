@@ -59,7 +59,7 @@ const DetailPage: React.FC = () => {
       </div>
       <div className="mt-8">
         <h2 className="text-2xl font-bold text-red-600 mb-4">Ver Película</h2>
-        <iframe src={`https://streamtape.com/e/${movie.imdbID}`} width="100%" height="500" allowFullScreen></iframe>
+        <iframe src={`https://streamtape.com/e/${movie.imdbID}`} title={movie.Title} width="100%" height="500" allowFullScreen></iframe>
       </div>
       <div className="mt-8">
         <h2 className="text-2xl font-bold text-red-600 mb-4">Calificaciones y comentarios</h2>
