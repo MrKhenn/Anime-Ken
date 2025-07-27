@@ -15,7 +15,7 @@ export default function useUnifiedData(section: 'movies'|'series'|'genres', genr
       return;
     }
 
-    fetch(`/api/${section}?page=${page}${genre ? `&genre=${genre}` : ''}`)
+    fetch(`http://localhost:4000/api/${section}?page=${page}${genre ? `&genre=${genre}` : ''}`)
       .then(r => r.json())
       .then(res => {
         sessionStorage.setItem(cacheKey, JSON.stringify(res));
