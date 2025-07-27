@@ -45,7 +45,7 @@ const DetailPage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-red-600 mb-8 text-center">{movie.Title}</h1>
       <div className="flex flex-col md:flex-row">
-        <img src={movie.Poster !== 'N/A' ? movie.Poster : movie.backdrop_path} alt={movie.Title} className="w-full md:w-1/3 rounded-lg" />
+        <img src={movie.backdrop_path || (movie.Poster !== 'N/A' ? movie.Poster : '')} alt={movie.Title} className="w-full md:w-1/3 rounded-lg" />
         <div className="md:ml-8 mt-8 md:mt-0">
           <p><strong>Año:</strong> {movie.Year}</p>
           <p><strong>Género:</strong> {movie.Genre}</p>
