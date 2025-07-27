@@ -11,6 +11,9 @@ import { Anime } from './components/AnimeCard';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DetailPage from './pages/DetailPage';
 import { getCachedMovies, cacheMovies } from './services/cacheService';
+import MoviesPage from './pages/MoviesPage';
+import SeriesPage from './pages/SeriesPage';
+import GenresPage from './pages/GenresPage';
 
 const App: React.FC = () => {
   const [, setCurrentPage] = useState('home');
@@ -150,28 +153,9 @@ const App: React.FC = () => {
                 <MovieGrid movies={shuffledGridMovies} />
               </>
             } />
-            <Route path="/movies" element={
-              <div className="container mx-auto px-4 py-8">
-                <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Todas las Películas</h2>
-                <MovieFilter onFilterChange={handleFilterChange} currentFilter={selectedGenre} />
-                <MovieGrid movies={filteredMovies} />
-              </div>
-            } />
-            <Route path="/series" element={
-              <div className="container mx-auto px-4 py-8">
-                <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Próximamente: Series</h2>
-                <MovieFilter onFilterChange={handleFilterChange} currentFilter={selectedGenre} />
-                <p className="text-center text-gray-400 mt-4">¡Estamos trabajando en ello! Vuelve pronto para ver nuestras series.</p>
-                <MovieGrid movies={filteredMovies.filter(movie => (movie.Type || '').includes('series'))} />
-              </div>
-            } />
-            <Route path="/genres" element={
-              <div className="container mx-auto px-4 py-8">
-                <h2 className="text-4xl font-bold text-red-600 mb-8 text-center">Explorar Géneros</h2>
-                <GenreButtons genres={allGenres} onSelectGenre={handleFilterChange} selectedGenre={selectedGenre} />
-                <MovieGrid movies={filteredMovies} />
-              </div>
-            } />
+            <Route path="/movies" element={<MoviesPage />} />
+            <Route path="/series" element={<SeriesPage />} />
+            <Route path="/genres" element={<GenresPage />} />
             <Route path="/watch/:imdbID" element={<DetailPage />} />
           </Routes>
         </main>

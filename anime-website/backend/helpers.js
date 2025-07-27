@@ -1,0 +1,64 @@
+import axios from 'axios';
+import NodeCache from 'node-cache';
+const cache = new NodeCache({ stdTTL: 3600 });
+
+const OMDB_URL = 'https://www.omdbapi.com';
+const TMDB_URL = 'https://api.themoviedb.org/3';
+
+export async function fetchMovies(page = 1) {
+  const key = `movies_${page}`;
+  if (cache.has(key)) return cache.get(key);
+
+  // TMDB – películas populares
+  const tmdbRes = await axios.get(`${TMDB_URL}/movie/popular`, {
+    params: { api_key: process.env.TMDB_KEY, page, language: 'es-ES' }
+  });
+
+  // OMDb – detalles por cada tmdb movie
+  const merged = await Promise.all(
+    tmdbRes.data.results.map(async m => {
+      const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_KEY}&i=${m.imdb_id}`);
+      return {
+        id: m.id,
+        imdbID: omdb.data.imdbID,
+        title: omdb.data.Title || m.title,
+        year: omdb.data.Year || m.release_date?.slice(0, 4),
+        poster: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : omdb.data.Poster,
+        genres: m.genre_ids, // array numérico
+        type: 'movie'
+      };
+    })
+  );
+
+  cache.set(key, merged);
+  return merged;
+}
+
+export async function fetchSeries(page = 1) {
+    const key = `series_${page}`;
+    if (cache.has(key)) return cache.get(key);
+
+    // TMDB – series populares
+    const tmdbRes = await axios.get(`${TMDB_URL}/tv/popular`, {
+      params: { api_key: process.env.TMDB_KEY, page, language: 'es-ES' }
+    });
+
+    // OMDb – detalles por cada tmdb movie
+    const merged = await Promise.all(
+      tmdbRes.data.results.map(async s => {
+        const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_KEY}&i=${s.imdb_id}`);
+        return {
+          id: s.id,
+          imdbID: omdb.data.imdbID,
+          title: omdb.data.Title || s.name,
+          year: omdb.data.Year || s.first_air_date?.slice(0, 4),
+          poster: s.poster_path ? `https://image.tmdb.org/t/p/w500${s.poster_path}` : omdb.data.Poster,
+          genres: s.genre_ids, // array numérico
+          type: 'series'
+        };
+      })
+    );
+
+    cache.set(key, merged);
+    return merged;
+  }
