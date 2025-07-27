@@ -3,6 +3,8 @@ import axios from 'axios';
 import cors from 'cors';
 import NodeCache from 'node-cache';
 import { fetchMovies, fetchSeries } from './helpers.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const cache = new NodeCache({ stdTTL: 3600 }); // TTL 1h
