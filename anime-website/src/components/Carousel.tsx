@@ -35,6 +35,7 @@ const Carousel: React.FC<Props> = ({
       showCancelButton: true,
       confirmButtonText: 'Ver ahora',
       cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#dc3545',
       customClass: {
         title: 'text-white',
         popup: 'border-2 border-red-600',

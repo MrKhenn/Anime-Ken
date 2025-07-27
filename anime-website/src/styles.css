@@ -72,3 +72,35 @@
 .hover-zoom:hover {
   transform: scale(1.05);
 }
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.card img {
+  width: 100%;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .35s ease,transform .35s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+}
+
+.card:hover .overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
