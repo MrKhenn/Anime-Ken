@@ -39,7 +39,7 @@ const App: React.FC = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:5000/api/movies/popular`);
+        const response = await fetch(`http://localhost:4000/api/movies`);
         const data = await response.json();
         if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
           const moviesArray = [data];
