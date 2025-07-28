@@ -57,6 +57,7 @@ app.get('/api/search', async (req, res) => {
 app.get('/api/movies', async (req, res) => {
     const page = req.query.page || 1;
     const movies = await fetchMovies(page);
+    console.log('Movies data:', movies);
     res.json(movies);
 });
 
