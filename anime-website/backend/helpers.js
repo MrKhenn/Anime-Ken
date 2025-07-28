@@ -21,13 +21,17 @@ export async function fetchMovies(page = 1) {
         const tmdbMovie = await axios.get(`${TMDB_URL}/movie/${m.id}?api_key=${process.env.TMDB_API_KEY}&language=es-ES`);
         const imdb_id = tmdbMovie.data.imdb_id;
         const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${imdb_id}`);
+        const backdrop_path = tmdbMovie.data.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbMovie.data.backdrop_path}` : null;
+        const genres = tmdbMovie.data.genres.map(g => g.name).join(', ');
         return {
           id: m.id,
           imdbID: imdb_id,
           title: omdb.data.Title || m.title,
           year: omdb.data.Year || m.release_date?.slice(0, 4),
           poster: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : omdb.data.Poster,
-          genres: m.genre_ids, // array numérico
+          imdbRating: omdb.data.imdbRating,
+          Genre: genres,
+          backdrop_path: backdrop_path,
           type: 'movie'
         };
       } catch (error) {
@@ -59,13 +63,17 @@ export async function fetchSeries(page = 1) {
         const tmdbSerie = await axios.get(`${TMDB_URL}/tv/${s.id}?api_key=${process.env.TMDB_API_KEY}&language=es-ES`);
         const imdb_id = tmdbSerie.data.external_ids.imdb_id;
         const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${imdb_id}`);
+        const backdrop_path = tmdbSerie.data.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbSerie.data.backdrop_path}` : null;
+        const genres = tmdbSerie.data.genres.map(g => g.name).join(', ');
         return {
           id: s.id,
           imdbID: imdb_id,
           title: omdb.data.Title || s.name,
           year: omdb.data.Year || s.first_air_date?.slice(0, 4),
           poster: s.poster_path ? `https://image.tmdb.org/t/p/w500${s.poster_path}` : omdb.data.Poster,
-          genres: s.genre_ids, // array numérico
+          imdbRating: omdb.data.imdbRating,
+          Genre: genres,
+          backdrop_path: backdrop_path,
           type: 'series'
         };
       } catch (error) {
