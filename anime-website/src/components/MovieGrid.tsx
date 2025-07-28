@@ -9,9 +9,9 @@ interface MovieGridProps {
 const MovieGrid: React.FC<MovieGridProps> = ({ movies = [] }) => {
   const handleWatchNow = (movie: Anime) => {
     Swal.fire({
-      title: movie.Title,
-      imageUrl: movie.Poster,
-      imageAlt: movie.Title,
+      title: movie.title,
+      imageUrl: movie.poster,
+      imageAlt: movie.title,
       background: '#000',
       showCancelButton: true,
       confirmButtonText: 'Ver ahora',
@@ -34,12 +34,12 @@ const MovieGrid: React.FC<MovieGridProps> = ({ movies = [] }) => {
         {movies.map((movie) => (
           <div key={movie.imdbID} className="card" onClick={() => handleWatchNow(movie)}>
             <img
-              src={movie.Poster}
-              alt={movie.Title}
+              src={movie.poster}
+              alt={movie.title}
             />
             <div className="overlay">
-              <h3>{movie.Title}</h3>
-              <p>{movie.Year} | {(movie.Genre || '').split(',')[0]}</p>
+              <h3>{movie.title}</h3>
+              <p>{movie.year} | {(movie.Genre || '').split(',')[0]}</p>
               <p>⭐ {movie.imdbRating}</p>
               <a href={`https://www.imdb.com/title/${movie.imdbID}`} target="_blank" rel="noopener noreferrer">Ver más</a>
             </div>
