@@ -17,18 +17,25 @@ export async function fetchMovies(page = 1) {
   // OMDb – detalles por cada tmdb movie
   const merged = await Promise.all(
     tmdbRes.data.results.map(async m => {
-      const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${m.imdb_id}`);
-      return {
-        id: m.id,
-        imdbID: omdb.data.imdbID,
-        title: omdb.data.Title || m.title,
-        year: omdb.data.Year || m.release_date?.slice(0, 4),
-        poster: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : omdb.data.Poster,
-        genres: m.genre_ids, // array numérico
-        type: 'movie'
-      };
+      try {
+        const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${m.imdb_id}`);
+        return {
+          id: m.id,
+          imdbID: omdb.data.imdbID,
+          title: omdb.data.Title || m.title,
+          year: omdb.data.Year || m.release_date?.slice(0, 4),
+          poster: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : omdb.data.Poster,
+          genres: m.genre_ids, // array numérico
+          type: 'movie'
+        };
+      } catch (error) {
+        console.error(`Error fetching OMDb data for ${m.title}:`, error.message);
+        return null;
+      }
     })
   );
+
+  return merged.filter(Boolean);
 
   cache.set(key, merged);
   return merged;
@@ -46,6 +53,7 @@ export async function fetchSeries(page = 1) {
     // OMDb – detalles por cada tmdb movie
     const merged = await Promise.all(
       tmdbRes.data.results.map(async s => {
+      try {
         const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${s.imdb_id}`);
         return {
           id: s.id,
@@ -56,8 +64,14 @@ export async function fetchSeries(page = 1) {
           genres: s.genre_ids, // array numérico
           type: 'series'
         };
+      } catch (error) {
+        console.error(`Error fetching OMDb data for ${s.name}:`, error.message);
+        return null;
+      }
       })
     );
+
+  return merged.filter(Boolean);
 
     cache.set(key, merged);
     return merged;
