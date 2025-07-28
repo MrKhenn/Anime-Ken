@@ -13,6 +13,8 @@ import MoviesPage from './pages/MoviesPage';
 import SeriesPage from './pages/SeriesPage';
 import GenresPage from './pages/GenresPage';
 import SearchPage from './pages/SearchPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
 const App: React.FC = () => {
   const [, setCurrentPage] = useState('home');
@@ -116,6 +118,8 @@ const App: React.FC = () => {
             <Route path="/genres" element={<GenresPage />} />
             <Route path="/watch/:imdbID" element={<DetailPage />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
           </Routes>
         </main>
 

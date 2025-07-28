@@ -69,6 +69,41 @@
   transform: translateY(0);
 }
 
+.comentario-card {
+  background-color: #1a1a1a;
+  border-left: 4px solid #dc143c;
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 10px rgba(220, 20, 60, 0.2);
+}
+
+.comentario-card img {
+  width: 50px;
+  height: 50px;
+}
+
+.reacciones button {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.reacciones button.active-like {
+  color: #28a745;
+}
+
+.reacciones button.active-dislike {
+  color: #dc3545;
+}
+
+.reacciones button:hover {
+  color: #fff;
+}
+
 .hover-zoom:hover {
   transform: scale(1.05);
 }

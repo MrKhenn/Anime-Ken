@@ -48,7 +48,7 @@ const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {}, onLogi
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </div>
-          <button onClick={onLogin} className="p-1 rounded-full hover:bg-red-800 transition-colors">
+          <Link to="/login" className="p-1 rounded-full hover:bg-red-800 transition-colors">
             <svg
               className="w-5 h-5 text-white"
               xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +62,7 @@ const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {}, onLogi
               <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
-          </button>
+          </Link>
         </div>
       </div>
     </header>

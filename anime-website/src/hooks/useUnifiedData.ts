@@ -25,9 +25,10 @@ export default function useUnifiedData(section: 'movies'|'series'|'genres', genr
     fetch(url)
       .then(r => r.json())
       .then(res => {
-        sessionStorage.setItem(cacheKey, JSON.stringify(res));
-        setData(prev => [...prev, ...res]);
-        setHasMore(res.length === 42);
+        const filteredRes = res.filter((item: any) => item.poster && item.poster !== 'N/A');
+        sessionStorage.setItem(cacheKey, JSON.stringify(filteredRes));
+        setData(prev => [...prev, ...filteredRes]);
+        setHasMore(filteredRes.length === 42);
       });
   }, [page, section, genre, cached, cacheKey]);
 

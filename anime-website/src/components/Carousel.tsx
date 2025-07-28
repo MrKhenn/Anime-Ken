@@ -29,6 +29,9 @@ const Carousel: React.FC<Props> = ({
   const handleWatchNow = (slide: CarouselSlide) => {
     Swal.fire({
       title: slide.caption,
+      html: `
+        <p class="text-white">${slide.description}</p>
+      `,
       imageUrl: slide.src,
       imageAlt: slide.alt,
       background: '#000',
@@ -67,7 +70,7 @@ const Carousel: React.FC<Props> = ({
           />
           {(s.caption || s.description) && (
             <BCarousel.Caption>
-              <h3 className="text-4xl">{s.caption}</h3>
+              <h3 className="text-4xl font-bold">{s.caption}</h3>
               <p className="text-lg">{s.description}</p>
             </BCarousel.Caption>
           )}
