@@ -18,10 +18,12 @@ export async function fetchMovies(page = 1) {
   const merged = await Promise.all(
     tmdbRes.data.results.map(async m => {
       try {
-        const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${m.imdb_id}`);
+        const tmdbMovie = await axios.get(`${TMDB_URL}/movie/${m.id}?api_key=${process.env.TMDB_API_KEY}&language=es-ES`);
+        const imdb_id = tmdbMovie.data.imdb_id;
+        const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${imdb_id}`);
         return {
           id: m.id,
-          imdbID: omdb.data.imdbID,
+          imdbID: imdb_id,
           title: omdb.data.Title || m.title,
           year: omdb.data.Year || m.release_date?.slice(0, 4),
           poster: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : omdb.data.Poster,
@@ -54,10 +56,12 @@ export async function fetchSeries(page = 1) {
     const merged = await Promise.all(
       tmdbRes.data.results.map(async s => {
       try {
-        const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${s.imdb_id}`);
+        const tmdbSerie = await axios.get(`${TMDB_URL}/tv/${s.id}?api_key=${process.env.TMDB_API_KEY}&language=es-ES`);
+        const imdb_id = tmdbSerie.data.external_ids.imdb_id;
+        const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${imdb_id}`);
         return {
           id: s.id,
-          imdbID: omdb.data.imdbID,
+          imdbID: imdb_id,
           title: omdb.data.Title || s.name,
           year: omdb.data.Year || s.first_air_date?.slice(0, 4),
           poster: s.poster_path ? `https://image.tmdb.org/t/p/w500${s.poster_path}` : omdb.data.Poster,
@@ -66,7 +70,15 @@ export async function fetchSeries(page = 1) {
         };
       } catch (error) {
         console.error(`Error fetching OMDb data for ${s.name}:`, error.message);
-        return null;
+        return {
+            id: s.id,
+            imdbID: null,
+            title: s.name,
+            year: s.first_air_date?.slice(0, 4),
+            poster: s.poster_path ? `https://image.tmdb.org/t/p/w500${s.poster_path}` : null,
+            genres: s.genre_ids,
+            type: 'series'
+        };
       }
       })
     );
