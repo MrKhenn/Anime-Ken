@@ -81,4 +81,39 @@ app.get('/api/genres', async (req, res) => {
     }
 });
 
+app.get('/api/detail/:imdbID', async (req, res) => {
+    const id = req.params.imdbID;
+    const cacheKey = `detail_${id}`;
+    if (cache.has(cacheKey)) return res.json(cache.get(cacheKey));
+
+    try {
+      // OMDb
+      const omdb = await axios.get(`${OMDB_URL}/?apikey=${process.env.OMDB_API_KEY}&i=${id}&plot=full`);
+      // TMDB (necesitamos tmdbID)
+      const tmdbFind = await axios.get(`${TMDB_URL}/find/${id}?external_source=imdb_id&api_key=${process.env.TMDB_API_KEY}`);
+      const movieTmdb = tmdbFind.data.movie_results[0];
+      let tmdbExtra = {};
+      if (movieTmdb) {
+        const [detail, videos] = await Promise.all([
+          axios.get(`${TMDB_URL}/movie/${movieTmdb.id}?api_key=${process.env.TMDB_API_KEY}&language=es-ES`),
+          axios.get(`${TMDB_URL}/movie/${movieTmdb.id}/videos?api_key=${process.env.TMDB_API_KEY}`)
+        ]);
+        tmdbExtra = {
+          backdropPath: detail.data.backdrop_path ? `https://image.tmdb.org/t/p/original${detail.data.backdrop_path}` : null,
+          trailer: videos.data.results.find(v => v.site === 'YouTube' && v.type === 'Trailer')
+        };
+      }
+
+      const final = {
+        ...omdb.data,
+        backdropPath: tmdbExtra.backdropPath,
+        trailer: tmdbExtra.trailer ? `https://www.youtube.com/watch?v=${tmdbExtra.trailer.key}` : null
+      };
+      cache.set(cacheKey, final);
+      res.json(final);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  });
+
 app.listen(4000, () => console.log('Proxy corriendo en http://localhost:4000'));
