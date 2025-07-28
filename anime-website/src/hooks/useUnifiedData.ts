@@ -15,7 +15,14 @@ export default function useUnifiedData(section: 'movies'|'series'|'genres', genr
       return;
     }
 
-    fetch(`http://localhost:4000/api/${section}?page=${page}${genre ? `&genre=${genre}` : ''}`)
+    let url = `http://localhost:4000/api/${section}?page=${page}`;
+    if (section === 'movies' && genre) {
+      url = `http://localhost:4000/api/search?q=${genre}`;
+    } else if (genre) {
+        url += `&genre=${genre}`;
+    }
+
+    fetch(url)
       .then(r => r.json())
       .then(res => {
         sessionStorage.setItem(cacheKey, JSON.stringify(res));

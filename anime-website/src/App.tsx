@@ -12,6 +12,7 @@ import { getCachedMovies, cacheMovies } from './services/cacheService';
 import MoviesPage from './pages/MoviesPage';
 import SeriesPage from './pages/SeriesPage';
 import GenresPage from './pages/GenresPage';
+import SearchPage from './pages/SearchPage';
 
 const App: React.FC = () => {
   const [, setCurrentPage] = useState('home');
@@ -65,32 +66,9 @@ const App: React.FC = () => {
     fetchMovies();
   }, []);
 
-  const handleSearch = async (query: string = '') => {
+  const handleSearch = (query: string = '') => {
     if (!query) return;
-    setLoading(true);
-    setError(null);
-
-    const cacheKey = `search_${query}`;
-    const cached = sessionStorage.getItem(cacheKey);
-    if (cached) {
-      const data = JSON.parse(cached);
-      setMovies(data);
-      setShuffledGridMovies(data);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:4000/api/search?q=${query}`);
-      const data = await response.json();
-      setMovies(data);
-      setShuffledGridMovies(data);
-      sessionStorage.setItem(cacheKey, JSON.stringify(data));
-    } catch (err) {
-      setError('Failed to fetch search results.');
-    } finally {
-      setLoading(false);
-    }
+    window.location.href = `/search?q=${query}`;
   };
 
   const handleLogin = () => {
@@ -137,6 +115,7 @@ const App: React.FC = () => {
             <Route path="/series" element={<SeriesPage />} />
             <Route path="/genres" element={<GenresPage />} />
             <Route path="/watch/:imdbID" element={<DetailPage />} />
+            <Route path="/search" element={<SearchPage />} />
           </Routes>
         </main>
 

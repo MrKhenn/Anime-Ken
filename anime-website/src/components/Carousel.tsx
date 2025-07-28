@@ -67,8 +67,8 @@ const Carousel: React.FC<Props> = ({
           />
           {(s.caption || s.description) && (
             <BCarousel.Caption>
-              <h3>{s.caption}</h3>
-              <p>{s.description}</p>
+              <h3 className="text-4xl">{s.caption}</h3>
+              <p className="text-lg">{s.description}</p>
             </BCarousel.Caption>
           )}
         </BCarousel.Item>

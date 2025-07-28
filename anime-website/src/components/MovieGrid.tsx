@@ -31,8 +31,8 @@ const MovieGrid: React.FC<MovieGridProps> = ({ movies = [] }) => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-        {movies.map((movie) => (
-          <div key={movie.imdbID} className="card" onClick={() => handleWatchNow(movie)}>
+        {movies.map((movie, index) => (
+          <div key={movie.imdbID || index} className="card" onClick={() => handleWatchNow(movie)}>
             <img
               src={movie.poster}
               alt={movie.title}
@@ -41,7 +41,7 @@ const MovieGrid: React.FC<MovieGridProps> = ({ movies = [] }) => {
               <h3>{movie.title}</h3>
               <p>{movie.year} | {(movie.Genre || '').split(',')[0]}</p>
               <p>⭐ {movie.imdbRating}</p>
-              <a href={`https://www.imdb.com/title/${movie.imdbID}`} target="_blank" rel="noopener noreferrer">Ver más</a>
+              <a href={`/watch/${movie.imdbID}`}>Ver más</a>
             </div>
           </div>
         ))}
