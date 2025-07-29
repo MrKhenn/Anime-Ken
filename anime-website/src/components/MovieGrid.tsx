@@ -32,10 +32,15 @@ const MovieGrid: React.FC<MovieGridProps> = ({ movies = [] }) => {
     <div className="container mx-auto py-8 px-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
         {movies.map((movie) => (
-          <div key={movie.id} className="card" onClick={() => handleWatchNow(movie)}>
+          <div key={movie.imdbID} className="card" onClick={() => handleWatchNow(movie)}>
             <img
               src={movie.poster}
               alt={movie.title}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null;
+                target.src = 'https://via.placeholder.com/300x450?text=No+Image';
+              }}
             />
             <div className="overlay">
               <h3>{movie.title}</h3>
