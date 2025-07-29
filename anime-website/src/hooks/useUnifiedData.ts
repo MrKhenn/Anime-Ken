@@ -5,6 +5,11 @@ export default function useUnifiedData(section: 'movies'|'series'|'genres', genr
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
+  useEffect(() => {
+    setData([]);
+    setPage(1);
+  }, [genre, section]);
+
   const cacheKey = `${section}_${genre || 'all'}_${page}`;
   const cached = sessionStorage.getItem(cacheKey);
 
@@ -15,12 +20,21 @@ export default function useUnifiedData(section: 'movies'|'series'|'genres', genr
       return;
     }
 
-    let url = `http://localhost:4000/api/search?q=${genre}&page=${page}`;
-    if (section !== 'movies' && genre) {
-        url = `http://localhost:4000/api/${section}?genre=${genre}&page=${page}`;
-    } else if (section !== 'movies') {
-        url = `http://localhost:4000/api/${section}?page=${page}`;
+    let url = '';
+    if (section === 'genres' && genre) {
+        url = `http://localhost:4000/api/genres?genre=${genre}&page=${page}`;
     }
+    else if (genre) {
+        url = `http://localhost:4000/api/search?q=${genre}&page=${page}`;
+    } else if (section === 'series') {
+        url = `http://localhost:4000/api/series?page=${page}`;
+    } else if (section === 'movies') {
+        url = `http://localhost:4000/api/movies?page=${page}`;
+    } else {
+        return;
+    }
+
+    if (!url) return;
 
     fetch(url)
       .then(r => r.json())
