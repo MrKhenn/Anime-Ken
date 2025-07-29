@@ -15,9 +15,11 @@ export default function useUnifiedData(section: 'movies'|'series'|'genres', genr
       return;
     }
 
-    let url = `http://localhost:4000/api/${section}?page=${page}`;
-    if (genre) {
-        url += `&genre=${genre}`;
+    let url = `http://localhost:4000/api/search?q=${genre}&page=${page}`;
+    if (section !== 'movies' && genre) {
+        url = `http://localhost:4000/api/${section}?genre=${genre}&page=${page}`;
+    } else if (section !== 'movies') {
+        url = `http://localhost:4000/api/${section}?page=${page}`;
     }
 
     fetch(url)

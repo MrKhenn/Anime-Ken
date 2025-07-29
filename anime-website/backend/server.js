@@ -74,7 +74,7 @@ app.get('/api/genres', async (req, res) => {
     const series = await fetchSeries(page);
     const all = [...movies, ...series];
     if (genre) {
-        const filtered = all.filter(item => item.genres.includes(parseInt(genre)));
+        const filtered = all.filter(item => item.Genre.includes(genre));
         res.json(filtered);
     } else {
         res.json(all);

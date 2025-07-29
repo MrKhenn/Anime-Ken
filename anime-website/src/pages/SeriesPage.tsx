@@ -10,7 +10,7 @@ const SeriesPage: React.FC = () => {
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-4xl font-bold text-red-600 mb-8 text-center">Series</h1>
             <GenreButtons genres={genres.map(g => g.name)} onSelectGenre={setSelectedGenre} selectedGenre={selectedGenre || ''} />
-            <Grid section="series" genre={genres.find(g => g.name === selectedGenre)?.id.toString()} />
+            <Grid section="series" genre={selectedGenre || ''} />
         </div>
     );
 };

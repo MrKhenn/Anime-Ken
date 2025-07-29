@@ -10,7 +10,7 @@ const MoviesPage: React.FC = () => {
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-4xl font-bold text-red-600 mb-8 text-center">Películas</h1>
             <GenreButtons genres={genres.map(g => g.name)} onSelectGenre={setSelectedGenre} selectedGenre={selectedGenre || ''} />
-            <Grid section="movies" genre={genres.find(g => g.name === selectedGenre)?.id.toString()} />
+            <Grid section="movies" genre={selectedGenre || ''} />
         </div>
     );
 };

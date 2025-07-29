@@ -24,7 +24,7 @@ export async function fetchMovies(page = 1) {
         const backdrop_path = tmdbMovie.data.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbMovie.data.backdrop_path}` : null;
         const genres = tmdbMovie.data.genres.map(g => g.name).join(', ');
         return {
-          id: m.id,
+          id: `${m.id}-${imdb_id}`,
           imdbID: imdb_id,
           title: omdb.data.Title || m.title,
           year: omdb.data.Year || m.release_date?.slice(0, 4),
@@ -66,7 +66,7 @@ export async function fetchSeries(page = 1) {
         const backdrop_path = tmdbSerie.data.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbSerie.data.backdrop_path}` : null;
         const genres = tmdbSerie.data.genres.map(g => g.name).join(', ');
         return {
-          id: s.id,
+          id: `${s.id}-${imdb_id}`,
           imdbID: imdb_id,
           title: omdb.data.Title || s.name,
           year: omdb.data.Year || s.first_air_date?.slice(0, 4),
