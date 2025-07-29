@@ -1,0 +1,46 @@
+//interacción backend con front://
+jules quiero crear algo interactivo para los usuarios y personalizado, este sera el paso mas fundamental de este proyecto.
+
+objetivos:
+1- Crear un sistema login/register totalmente funcional
+2- que una vez logueado pueda comentar y puntuar comentarios, peliculas y responder comentarios, etc..
+3- que pueda darle me gusta o le disgusta a una pelicula
+4- crear un sistema de reportes donde si le unden el boton reportar salga un sweetalert2 con un barra desplegable que contenga todas las posibles razones de reporte y un textarea para que se exprese con sus palabras
+5- que el usuario registre nombre, edad, correo y contraseña.
+6- que el usuario ingrese con su correo y contraseña
+
+Desarrollo:
+debemos conectar la api de la base de datos a nuestro backend
+aqui te dejo una guia y directamente el enlace personalizado con la dependencia 
+
+{Connecting with MongoDB Driver
+1. Select your driver and version
+We recommend installing and using the latest driver version.
+
+Driver
+
+Version
+
+2. Install your driver
+Run the following on the command line
+npm install mongodb
+
+View MongoDB Node.js Driver installation instructions.
+3. Add your connection string into your application code
+Use this connection string in your application
+
+
+View full code sample
+
+mongodb+srv://<KenMovie>:<Kheynner1111665879>@kenmovie.cptqowj.mongodb.net/?retryWrites=true&w=majority&appName=KenMovie
+
+Replace <db_password> with the password for the <db_username> database user. Ensure any option params are URL encoded.}
+
+una vez conectada, desarrollar login/register
+
+1- el backend tendra que crear una esquema de usuario donde almacene los datos de registro de usuario y luego con un get los compare
+tecnicamente seria un sistema SCRUD por que la idea es agregar datos por medio de register, comparar y obtener datos para login, cifrar contraseñas con una dependencia de encryptacion, una vez ingresado el usuario y iniciado seccion (nota: cuando se registre el backend debe asignarle un (id) para facilitar su union y busqueda con otros esquemas como comentarios), cada que le unda al icono de user al lado de la barra de busqueda, saldra un menu con los colores de la pagina, este menu tendra estas opciones (nombre de usuario, configuracion, peliculas bloqueadas y salir) si le unde a configuracion se despliega otro menu con las opciones, cambiar nombre, cambiar contraseña y eliminar cuenta creo que no hace falta explicarlo pero igual lo hare, alli seria actualizar los registros de la base de datos del esquema y eliminar en caso de que le unda eliminar cuenta.
+
+2- los comentarios tendran su propio esquema donde no dependera que el usuario este logeado para que puedan verse, es decir seran publicos independiente mente de si esta o no logeado y se conectara con el login mediante el id del usuario, asi se guardara el comentario con los datos del usuario, los usuarios podran dar me gusta o disgusta a los comentarios o directamente responder, todo esto se guardara en el esquema comentarios, la pagina/proyecto debera ser capaz de identificar cuando el usuario este logueado.
+
+3- el me gusta, disgusta y reporte en peliculas, este se guardara en otro esquema y al igual que los comentarios sera independiente al si el usuario esta logeado o no obvio para interactuar necesitara estar logeado al igual que ocurre con comentarios y para el reporte si sera mas dinamico con un sweet alert 2, la idea es que dentro del sweetalert2 salga un menu desplegable y un textarea, el menudesplegable traera todas las posibles causas de reporte y el text area es para que el usuario pueda expresarse una vez hecho se guardara en el esquema de el me gusta, disgusta y reporte en peliculas con todos los datos del usuario, incluyendo el id y el comentario, y asi cada vez que se logee ese usuario, la pelicula ya no le saldra en la pagina, osea poner ese filtro para que no salga esas peliculas segun el usuario y solo saldra en el apartado peliculas bloquedas en el menu desplegable de usuarios
