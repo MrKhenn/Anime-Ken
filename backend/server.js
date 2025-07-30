@@ -220,8 +220,13 @@ app.get('/api/series/genre/:id', async (req, res) => {
 app.get('/api/movie/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const response = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`);
-        res.json(response.data);
+        const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`);
+        const creditsResponse = await axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${TMDB_API_KEY}&language=en-US`);
+        const movieData = {
+            ...movieResponse.data,
+            credits: creditsResponse.data,
+        };
+        res.json(movieData);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching movie details' });
     }

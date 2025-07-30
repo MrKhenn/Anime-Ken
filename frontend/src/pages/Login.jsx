@@ -45,6 +45,9 @@ const Login = () => {
                     </div>
                     <button type="submit" className="btn btn-danger">Iniciar Sesión</button>
                 </form>
+                <p className="mt-3">
+                    ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
+                </p>
             </div>
         </div>
     );

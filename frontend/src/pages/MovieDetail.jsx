@@ -18,6 +18,8 @@ const MovieDetail = () => {
         return <div>Loading...</div>;
     }
 
+    const director = movie.credits.crew.find(person => person.job === 'Director');
+
     return (
         <div className="row">
             <div className="col-md-4">
@@ -28,6 +30,13 @@ const MovieDetail = () => {
                 <p>{movie.overview}</p>
                 <p><strong>Fecha de lanzamiento:</strong> {movie.release_date}</p>
                 <p><strong>Puntuación:</strong> {movie.vote_average}</p>
+                <p><strong>Director:</strong> {director ? director.name : 'N/A'}</p>
+                <h5>Elenco:</h5>
+                <ul>
+                    {movie.credits.cast.slice(0, 10).map(actor => (
+                        <li key={actor.cast_id}>{actor.name} como {actor.character}</li>
+                    ))}
+                </ul>
                 <div className="mt-4">
                     <iframe
                         src={`https://streamtape.com/e/`}
