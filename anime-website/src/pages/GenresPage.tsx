@@ -1,37 +1,90 @@
-import React, { useState } from 'react';
-import Grid from '../components/Grid';
-import GenreTags from '../components/GenreTags';
+import React, { useState, useEffect } from 'react';
+import MovieCard from '../components/MovieCard';
+import SeriesCard from '../components/SeriesCard';
+import { Anime } from '../components/AnimeCard';
 
-const GenresPage: React.FC = () => {
-    const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
-    const genres = [
-        {id: 28, name: 'Action'},
-        {id: 12, name: 'Adventure'},
-        {id: 16, name: 'Animation'},
-        {id: 35, name: 'Comedy'},
-        {id: 80, name: 'Crime'},
-        {id: 99, name: 'Documentary'},
-        {id: 18, name: 'Drama'},
-        {id: 10751, name: 'Family'},
-        {id: 14, name: 'Fantasy'},
-        {id: 36, name: 'History'},
-        {id: 27, name: 'Horror'},
-        {id: 10402, name: 'Music'},
-        {id: 9648, name: 'Mystery'},
-        {id: 10749, name: 'Romance'},
-        {id: 878, name: 'Science Fiction'},
-        {id: 10770, name: 'TV Movie'},
-        {id: 53, name: 'Thriller'},
-        {id: 10752, name: 'War'}
-    ];
+const GenresPage = () => {
+  const [items, setItems] = useState<Anime[]>([]);
+  const [filteredItems, setFilteredItems] = useState<Anime[]>([]);
+  const [genres, setGenres] = useState<string[]>([]);
+  const [selectedGenre, setSelectedGenre] = useState('all');
 
-    return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold text-red-600 mb-8 text-center">Géneros</h1>
-            <GenreTags genres={genres} onSelectGenre={setSelectedGenre} selectedGenre={selectedGenre} />
-            <Grid section="genres" genre={selectedGenre || ''} />
+  useEffect(() => {
+    fetchAllContent();
+  }, []);
+
+  const fetchAllContent = async () => {
+    try {
+      const [moviesRes, seriesRes] = await Promise.all([
+        fetch('http://localhost:4000/api/movies'),
+        fetch('http://localhost:4000/api/series')
+      ]);
+
+      const movies = await moviesRes.json();
+      const series = await seriesRes.json();
+
+      const allItems = [...movies, ...series];
+      setItems(allItems);
+      setFilteredItems(allItems);
+
+      const uniqueGenres = [...new Set(allItems.map(item => item.Genre).join(', ').split(', ').filter(Boolean))];
+      setGenres(uniqueGenres);
+    } catch (error) {
+      console.error('Error al obtener contenido:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedGenre === 'all') {
+      setFilteredItems(items);
+    } else {
+      setFilteredItems(items.filter(item =>
+        (item.Genre && item.Genre.includes(selectedGenre))
+      ));
+    }
+  }, [selectedGenre, items]);
+
+  const renderItem = (item: Anime) => {
+    // Assuming 'type' property exists on the item to distinguish between movie and series
+    if ('Type' in item && item.Type === 'series') {
+        return <SeriesCard key={item.imdbID} serie={item} />;
+    }
+    return <MovieCard key={item.imdbID} movie={item} />;
+  };
+
+  return (
+    <div className="container mt-4">
+      <h1>Géneros</h1>
+
+      <div className="mb-4">
+        <div className="btn-group" role="group">
+          <button
+            className={`btn btn-outline-primary ${selectedGenre === 'all' ? 'active' : ''}`}
+            onClick={() => setSelectedGenre('all')}
+          >
+            Todo
+          </button>
+          {genres.map(genre => (
+            <button
+              key={genre}
+              className={`btn btn-outline-primary ${selectedGenre === genre ? 'active' : ''}`}
+              onClick={() => setSelectedGenre(genre)}
+            >
+              {genre}
+            </button>
+          ))}
         </div>
-    );
+      </div>
+
+      <div className="row">
+        {filteredItems.map(item => (
+          <div key={item.imdbID} className="col-md-4 mb-4">
+            {renderItem(item)}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default GenresPage;

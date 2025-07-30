@@ -1,37 +1,62 @@
-import React, { useState } from 'react';
-import Grid from '../components/Grid';
-import GenreDropdown from '../components/GenreDropdown';
+import React, { useState, useEffect } from 'react';
+import FilterDropdown from '../components/FilterDropdown';
+import MovieCard from '../components/MovieCard';
+import { Anime } from '../components/AnimeCard';
 
-const MoviesPage: React.FC = () => {
-    const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
-    const genres = [
-        {id: 28, name: 'Action'},
-        {id: 12, name: 'Adventure'},
-        {id: 16, name: 'Animation'},
-        {id: 35, name: 'Comedy'},
-        {id: 80, name: 'Crime'},
-        {id: 99, name: 'Documentary'},
-        {id: 18, name: 'Drama'},
-        {id: 10751, name: 'Family'},
-        {id: 14, name: 'Fantasy'},
-        {id: 36, name: 'History'},
-        {id: 27, name: 'Horror'},
-        {id: 10402, name: 'Music'},
-        {id: 9648, name: 'Mystery'},
-        {id: 10749, name: 'Romance'},
-        {id: 878, name: 'Science Fiction'},
-        {id: 10770, name: 'TV Movie'},
-        {id: 53, name: 'Thriller'},
-        {id: 10752, name: 'War'}
-    ];
+const MoviesPage = () => {
+  const [movies, setMovies] = useState<Anime[]>([]);
+  const [filteredMovies, setFilteredMovies] = useState<Anime[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
-    return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold text-red-600 mb-8 text-center">Películas</h1>
-            <GenreDropdown genres={genres} onSelectGenre={setSelectedGenre} selectedGenre={selectedGenre} />
-            <Grid section="movies" genre={selectedGenre || ''} />
-        </div>
-    );
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+
+  const fetchMovies = async () => {
+    try {
+      const response = await fetch('http://localhost:4000/api/movies');
+      const data = await response.json();
+
+      setMovies(data);
+      setFilteredMovies(data);
+
+      const uniqueCategories = [...new Set(data.map((movie: Anime) => movie.Genre).join(', ').split(', ').filter(Boolean))];
+      setCategories(uniqueCategories);
+    } catch (error) {
+      console.error('Error al obtener películas:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedCategory === 'all') {
+      setFilteredMovies(movies);
+    } else {
+      setFilteredMovies(movies.filter(movie => movie.Genre && movie.Genre.includes(selectedCategory)));
+    }
+  }, [selectedCategory, movies]);
+
+  return (
+    <div className="container mt-4">
+      <h1>Películas</h1>
+
+      <div className="mb-4">
+        <FilterDropdown
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
+      </div>
+
+      <div className="row">
+        {filteredMovies.map(movie => (
+          <div key={movie.imdbID} className="col-md-4 mb-4">
+            <MovieCard movie={movie} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default MoviesPage;
