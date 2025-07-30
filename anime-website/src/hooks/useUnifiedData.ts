@@ -21,15 +21,18 @@ export default function useUnifiedData(section: 'movies'|'series'|'genres', genr
     }
 
     let url = '';
-    if (section === 'genres' && genre) {
-        url = `http://localhost:4000/api/genres?genre=${genre}&page=${page}`;
-    }
-    else if (genre) {
-        url = `http://localhost:4000/api/search?q=${genre}&page=${page}`;
+    if (section === 'genres') {
+        if (genre) {
+            url = `http://localhost:4000/api/genres?genre=${genre}&page=${page}`;
+        } else {
+            url = `http://localhost:4000/api/genres?page=${page}`;
+        }
     } else if (section === 'series') {
         url = `http://localhost:4000/api/series?page=${page}`;
     } else if (section === 'movies') {
         url = `http://localhost:4000/api/movies?page=${page}`;
+    } else if (genre) {
+        url = `http://localhost:4000/api/search?q=${genre}&page=${page}`;
     } else {
         return;
     }
