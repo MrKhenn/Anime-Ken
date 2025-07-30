@@ -198,6 +198,35 @@ app.get('/api/movies/genre/:id', async (req, res) => {
     }
 });
 
+app.get('/api/series/popular', async (req, res) => {
+    try {
+        const response = await axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching popular series' });
+    }
+});
+
+app.get('/api/series/genre/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const response = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_genres=${id}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching series by genre' });
+    }
+});
+
+app.get('/api/movie/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const response = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching movie details' });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
