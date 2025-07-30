@@ -56,29 +56,26 @@ app.get('/api/search', async (req, res) => {
 /* 1.2  Detalle completo */
 app.get('/api/movies', async (req, res) => {
     const page = req.query.page || 1;
-    const movies = await fetchMovies(page);
+    const genre = req.query.genre;
+    const movies = await fetchMovies(page, genre);
     console.log('Movies data:', movies);
     res.json(movies);
 });
 
 app.get('/api/series', async (req, res) => {
     const page = req.query.page || 1;
-    const series = await fetchSeries(page);
+    const genre = req.query.genre;
+    const series = await fetchSeries(page, genre);
     res.json(series);
 });
 
 app.get('/api/genres', async (req, res) => {
     const genre = req.query.genre;
     const page = req.query.page || 1;
-    const movies = await fetchMovies(page);
-    const series = await fetchSeries(page);
+    const movies = await fetchMovies(page, genre);
+    const series = await fetchSeries(page, genre);
     const all = [...movies, ...series];
-    if (genre) {
-        const filtered = all.filter(item => item.Genre.includes(genre));
-        res.json(filtered);
-    } else {
-        res.json(all);
-    }
+    res.json(all);
 });
 
 app.get('/api/detail/:imdbID', async (req, res) => {

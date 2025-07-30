@@ -5,14 +5,14 @@ const cache = new NodeCache({ stdTTL: 3600 });
 const OMDB_URL = 'https://www.omdbapi.com';
 const TMDB_URL = 'https://api.themoviedb.org/3';
 
-export async function fetchMovies(page = 1) {
-  const key = `movies_${page}`;
+export async function fetchMovies(page = 1, genre) {
+  const key = `movies_${page}_${genre || 'all'}`;
   if (cache.has(key)) return cache.get(key);
 
   // TMDB – películas populares
-  const tmdbRes = await axios.get(`${TMDB_URL}/movie/popular`, {
-    params: { api_key: process.env.TMDB_API_KEY, page, language: 'es-ES' }
-  });
+  const params = { api_key: process.env.TMDB_API_KEY, page, language: 'es-ES' };
+  if (genre) params.with_genres = genre;
+  const tmdbRes = await axios.get(`${TMDB_URL}/discover/movie`, { params });
 
   // OMDb – detalles por cada tmdb movie
   const merged = await Promise.all(
@@ -47,14 +47,14 @@ export async function fetchMovies(page = 1) {
   return merged;
 }
 
-export async function fetchSeries(page = 1) {
-    const key = `series_${page}`;
+export async function fetchSeries(page = 1, genre) {
+    const key = `series_${page}_${genre || 'all'}`;
     if (cache.has(key)) return cache.get(key);
 
     // TMDB – series populares
-    const tmdbRes = await axios.get(`${TMDB_URL}/tv/popular`, {
-      params: { api_key: process.env.TMDB_API_KEY, page, language: 'es-ES' }
-    });
+    const params = { api_key: process.env.TMDB_API_KEY, page, language: 'es-ES' };
+    if (genre) params.with_genres = genre;
+    const tmdbRes = await axios.get(`${TMDB_URL}/discover/tv`, { params });
 
     // OMDb – detalles por cada tmdb movie
     const merged = await Promise.all(
