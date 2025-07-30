@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Grid from '../components/Grid';
-import GenreDropdown from '../components/GenreDropdown';
+import GenreTags from '../components/GenreTags';
 
 const GenresPage: React.FC = () => {
     const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
@@ -28,7 +28,7 @@ const GenresPage: React.FC = () => {
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-4xl font-bold text-red-600 mb-8 text-center">Géneros</h1>
-            <GenreDropdown genres={genres} onSelectGenre={setSelectedGenre} selectedGenre={selectedGenre} />
+            <GenreTags genres={genres} onSelectGenre={setSelectedGenre} selectedGenre={selectedGenre} />
             <Grid section="genres" genre={selectedGenre || ''} />
         </div>
     );
