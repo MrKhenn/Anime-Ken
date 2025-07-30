@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './Header.css';
 
 const Header = () => {
     const [query, setQuery] = useState('');
@@ -13,7 +14,7 @@ const Header = () => {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark header">
+        <nav className="navbar navbar-expand-lg navbar-dark header">
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/">
                     <img src="https://via.placeholder.com/150x50" alt="Logo" />
