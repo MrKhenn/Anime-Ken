@@ -1,0 +1,44 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Carousel } from 'react-bootstrap';
+
+const Home = () => {
+    const [movies, setMovies] = useState([]);
+
+    useEffect(() => {
+        const fetchMovies = async () => {
+            const response = await axios.get('http://localhost:5000/api/movies/popular');
+            setMovies(response.data.results.slice(0, 5));
+        };
+        fetchMovies();
+    }, []);
+
+    return (
+        <div>
+            <Carousel>
+                {movies.map(movie => (
+                    <Carousel.Item key={movie.id}>
+                        <img
+                            className="d-block w-100"
+                            src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+                            alt={movie.title}
+                        />
+                        <Carousel.Caption>
+                            <h3>{movie.title}</h3>
+                            <p>{movie.overview}</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                ))}
+            </Carousel>
+
+            <div className="mt-5">
+                <h2>Descripción de la Página</h2>
+                <p>
+                    Bienvenido a nuestra plataforma de streaming de películas y series. Aquí encontrarás una gran variedad de contenido para disfrutar.
+                </p>
+            </div>
+        </div>
+    );
+};
+
+export default Home;

@@ -155,6 +155,49 @@ app.get('/movies/:id/comments', (req, res) => {
 });
 
 
+const axios = require('axios');
+
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
+const OMDB_API_KEY = process.env.OMDB_API_KEY;
+
+app.get('/api/movies/popular', async (req, res) => {
+    try {
+        const response = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching popular movies' });
+    }
+});
+
+app.get('/api/search', async (req, res) => {
+    const { query } = req.query;
+    try {
+        const response = await axios.get(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${query}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error searching' });
+    }
+});
+
+app.get('/api/genres', async (req, res) => {
+    try {
+        const response = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching genres' });
+    }
+});
+
+app.get('/api/movies/genre/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${id}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching movies by genre' });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
