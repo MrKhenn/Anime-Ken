@@ -29,9 +29,17 @@ export default function useUnifiedData(section: 'movies'|'series'|'genres', genr
                 url = `http://localhost:4000/api/genres?page=${page}`;
             }
         } else if (section === 'series') {
-            url = `http://localhost:4000/api/series?page=${page}`;
+            if (genre) {
+                url = `http://localhost:4000/api/series?genre=${genre}&page=${page}`;
+            } else {
+                url = `http://localhost:4000/api/series?page=${page}`;
+            }
         } else if (section === 'movies') {
-            url = `http://localhost:4000/api/movies?page=${page}`;
+            if (genre) {
+                url = `http://localhost:4000/api/movies?genre=${genre}&page=${page}`;
+            } else {
+                url = `http://localhost:4000/api/movies?page=${page}`;
+            }
         } else if (genre) {
             url = `http://localhost:4000/api/search?q=${genre}&page=${page}`;
         } else {
