@@ -27,7 +27,7 @@ const GenresPage = () => {
       setItems(allItems);
       setFilteredItems(allItems);
 
-      const uniqueGenres = [...new Set(allItems.map(item => item.Genre).join(', ').split(', ').filter(Boolean))];
+      const uniqueGenres = Array.from(new Set(allItems.map(item => item.Genre).join(', ').split(', ').filter(Boolean)));
       setGenres(uniqueGenres);
     } catch (error) {
       console.error('Error al obtener contenido:', error);

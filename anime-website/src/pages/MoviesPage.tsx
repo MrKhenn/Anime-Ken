@@ -21,7 +21,7 @@ const MoviesPage = () => {
       setMovies(data);
       setFilteredMovies(data);
 
-      const uniqueCategories = [...new Set(data.map((movie: Anime) => movie.Genre).join(', ').split(', ').filter(Boolean))];
+      const uniqueCategories = Array.from(new Set(data.map((movie: Anime) => movie.Genre).join(', ').split(', ').filter(Boolean)));
       setCategories(uniqueCategories);
     } catch (error) {
       console.error('Error al obtener películas:', error);

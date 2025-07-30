@@ -21,7 +21,7 @@ const SeriesPage = () => {
       setSeries(data);
       setFilteredSeries(data);
 
-      const uniqueCategories = [...new Set(data.map((serie: Anime) => serie.Genre).join(', ').split(', ').filter(Boolean))];
+      const uniqueCategories = Array.from(new Set(data.map((serie: Anime) => serie.Genre).join(', ').split(', ').filter(Boolean)));
       setCategories(uniqueCategories);
     } catch (error) {
       console.error('Error al obtener series:', error);
