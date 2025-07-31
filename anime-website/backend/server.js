@@ -70,14 +70,17 @@ app.get('/api/series', async (req, res) => {
     res.json(series);
 });
 
+const genresList = { 28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War' };
+
 app.get('/api/genres', async (req, res) => {
-    const genre = req.query.genre;
+    const genreId = req.query.genre;
     const page = req.query.page || 1;
     const movies = await fetchMovies(page);
     const series = await fetchSeries(page);
     const all = [...movies, ...series];
-    if (genre) {
-        const filtered = all.filter(item => item.Genre.includes(genre));
+    if (genreId) {
+        const genreName = genresList[genreId];
+        const filtered = all.filter(item => item.Genre && item.Genre.includes(genreName));
         res.json(filtered);
     } else {
         res.json(all);
