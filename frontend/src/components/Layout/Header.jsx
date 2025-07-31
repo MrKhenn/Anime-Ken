@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserCircleIcon, SearchIcon } from '@heroicons/react/24/solid';
+import { UserCircleIcon, SearchIcon } from '@heroicons/react/solid';
 
 const Header = () => {
     const [query, setQuery] = useState('');
