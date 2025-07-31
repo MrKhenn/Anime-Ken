@@ -246,5 +246,49 @@ app.post('/api/interactions/comment', (req, res) => {
     res.status(201).json(interactions[movieId]);
 });
 
+// Streamtape route
+app.get('/api/stream/:imdbID', async (req, res) => {
+    const { imdbID } = req.params;
+    const { STREAMTAPE_USER, STREAMTAPE_API_KEY } = process.env; // API_KEY is not provided by user yet
+
+    if (!STREAMTAPE_USER || !STREAMTAPE_API_KEY) {
+        // This is a placeholder response.
+        // The user needs to provide their Streamtape API Key.
+        // For now, we will return the old embed URL structure.
+        // This will likely result in a "Video not found" error on the frontend,
+        // which will indicate that the API key is needed.
+        console.log('Streamtape API credentials are not fully configured.');
+        return res.status(200).json({ url: `https://streamtape.com/e/${imdbID}` });
+    }
+
+    try {
+        // Step 1: Get a download ticket
+        const ticketResponse = await axios.get(`https://api.streamtape.com/file/dlticket`, {
+            params: {
+                file: imdbID, // This is an assumption, imdbID might not be the file ID
+                login: STREAMTAPE_USER,
+                key: STREAMTAPE_API_KEY
+            }
+        });
+
+        const ticket = ticketResponse.data.result.ticket;
+
+        // Step 2: Use the ticket to get the download link
+        const downloadResponse = await axios.get(`https://api.streamtape.com/file/dl`, {
+            params: {
+                file: imdbID,
+                ticket: ticket
+            }
+        });
+
+        const streamUrl = downloadResponse.data.result.url;
+        res.status(200).json({ url: streamUrl });
+
+    } catch (error) {
+        console.error('Error fetching from Streamtape API:', error.message);
+        res.status(500).send('Failed to get stream URL from Streamtape');
+    }
+});
+
 
 app.listen(4000, () => console.log('Proxy corriendo en http://localhost:4000'));

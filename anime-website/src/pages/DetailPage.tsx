@@ -13,6 +13,7 @@ const DetailPage: React.FC = () => {
     const { imdbID } = useParams<{ imdbID: string }>();
     const [movie, setMovie] = useState<Anime | null>(null);
     const [interactions, setInteractions] = useState<Interaction>({ likes: [], dislikes: [], comments: [] });
+    const [streamUrl, setStreamUrl] = useState<string>('');
     const [commentText, setCommentText] = useState('');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -41,6 +42,11 @@ const DetailPage: React.FC = () => {
                 const interactionsResponse = await fetch(`http://localhost:4000/api/interactions/${imdbID}`);
                 const interactionsData = await interactionsResponse.json();
                 setInteractions(interactionsData);
+
+                // Fetch stream URL
+                const streamResponse = await fetch(`http://localhost:4000/api/stream/${imdbID}`);
+                const streamData = await streamResponse.json();
+                setStreamUrl(streamData.url);
 
             } catch (err) {
                 setError('Failed to fetch details.');
@@ -102,6 +108,15 @@ const DetailPage: React.FC = () => {
                     <p><strong>Sinopsis:</strong> {movie.Plot}</p>
                     {movie.trailer && <a href={movie.trailer} target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline">Ver trailer</a>}
                 </div>
+            </div>
+
+            <div className="mt-8">
+                <h2 className="text-2xl font-bold text-red-600 mb-4">Ver Película</h2>
+                {streamUrl ? (
+                    <iframe src={streamUrl} title={movie.Title} width="100%" height="500" allowFullScreen></iframe>
+                ) : (
+                    <p>Cargando video...</p>
+                )}
             </div>
 
             <div className="mt-8 flex justify-end items-center space-x-4">
