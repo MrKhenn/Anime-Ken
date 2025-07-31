@@ -1,13 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
 interface LayoutHeaderProps {
   onSearch?: (query: string) => void;
-  onLogin?: () => void;
-  onNavigate?: (page: string) => void;
 }
 
-const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {}, onLogin = () => {}, onNavigate = () => {} }) => {
+const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {} }) => {
+  const { user, logout } = useUser();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <header className="bg-black text-white p-2 border-b border-red-800 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
@@ -22,7 +29,7 @@ const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {}, onLogi
             <Link to="/genres" className="text-md font-semibold hover:text-red-600 transition-colors">Géneros</Link>
           </nav>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-4">
           <div className="relative">
             <input
               type="text"
@@ -48,21 +55,30 @@ const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {}, onLogi
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </div>
-          <Link to="/login" className="p-1 rounded-full hover:bg-red-800 transition-colors">
-            <svg
-              className="w-5 h-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-          </Link>
+          {user ? (
+            <div className="flex items-center space-x-4">
+              <span className="text-white font-semibold">Hola, {user.username}</span>
+              <button onClick={handleLogout} className="bg-red-600 text-white px-3 py-1 rounded-full hover:bg-red-700 transition-colors">
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="p-1 rounded-full hover:bg-red-800 transition-colors">
+              <svg
+                className="w-5 h-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </Link>
+          )}
         </div>
       </div>
     </header>

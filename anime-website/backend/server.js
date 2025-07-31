@@ -4,6 +4,8 @@ import cors from 'cors';
 import NodeCache from 'node-cache';
 import { fetchMovies, fetchSeries } from './helpers.js';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
+import fs from 'fs';
 dotenv.config();
 
 console.log('OMDB_API_KEY:', process.env.OMDB_API_KEY);
@@ -12,6 +14,7 @@ console.log('TMDB_API_KEY:', process.env.TMDB_API_KEY);
 const app = express();
 const cache = new NodeCache({ stdTTL: 3600 }); // TTL 1h
 app.use(cors());
+app.use(bodyParser.json());
 
 const OMDB_URL = 'https://www.omdbapi.com';
 const TMDB_URL = 'https://api.themoviedb.org/3';
@@ -115,5 +118,133 @@ app.get('/api/detail/:imdbID', async (req, res) => {
       res.status(500).send(err.message);
     }
   });
+
+// Auth routes
+const USERS_FILE = './users.json';
+
+app.post('/api/register', (req, res) => {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).send('Missing required fields');
+    }
+
+    fs.readFile(USERS_FILE, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).send('Error reading from database');
+        }
+
+        const users = JSON.parse(data);
+        const userExists = users.find(user => user.email === email);
+
+        if (userExists) {
+            return res.status(400).send('User already exists');
+        }
+
+        const newUser = { id: Date.now().toString(), username, email, password }; // In a real app, hash the password
+        users.push(newUser);
+
+        fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2), (err) => {
+            if (err) {
+                return res.status(500).send('Error writing to database');
+            }
+            res.status(201).json({ message: 'User registered successfully', user: newUser });
+        });
+    });
+});
+
+app.post('/api/login', (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).send('Missing required fields');
+    }
+
+    fs.readFile(USERS_FILE, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).send('Error reading from database');
+        }
+
+        const users = JSON.parse(data);
+        const user = users.find(user => user.email === email && user.password === password); // In a real app, compare hashed passwords
+
+        if (!user) {
+            return res.status(401).send('Invalid credentials');
+        }
+
+        res.status(200).json({ message: 'Login successful', user });
+    });
+});
+
+// Interactions routes
+const INTERACTIONS_FILE = './interactions.json';
+
+const readInteractions = () => {
+    try {
+        const data = fs.readFileSync(INTERACTIONS_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        return {};
+    }
+};
+
+const writeInteractions = (data) => {
+    fs.writeFileSync(INTERACTIONS_FILE, JSON.stringify(data, null, 2));
+};
+
+app.get('/api/interactions/:id', (req, res) => {
+    const { id } = req.params;
+    const interactions = readInteractions();
+    res.status(200).json(interactions[id] || { likes: [], dislikes: [], comments: [] });
+});
+
+app.post('/api/interactions/like', (req, res) => {
+    const { movieId, userId } = req.body;
+    if (!movieId || !userId) return res.status(400).send('Missing fields');
+
+    const interactions = readInteractions();
+    if (!interactions[movieId]) {
+        interactions[movieId] = { likes: [], dislikes: [], comments: [] };
+    }
+
+    interactions[movieId].likes = [...new Set([...interactions[movieId].likes, userId])];
+    interactions[movieId].dislikes = interactions[movieId].dislikes.filter(id => id !== userId);
+
+    writeInteractions(interactions);
+    res.status(200).json(interactions[movieId]);
+});
+
+app.post('/api/interactions/dislike', (req, res) => {
+    const { movieId, userId } = req.body;
+    if (!movieId || !userId) return res.status(400).send('Missing fields');
+
+    const interactions = readInteractions();
+    if (!interactions[movieId]) {
+        interactions[movieId] = { likes: [], dislikes: [], comments: [] };
+    }
+
+    interactions[movieId].dislikes = [...new Set([...interactions[movieId].dislikes, userId])];
+    interactions[movieId].likes = interactions[movieId].likes.filter(id => id !== userId);
+
+    writeInteractions(interactions);
+    res.status(200).json(interactions[movieId]);
+});
+
+app.post('/api/interactions/comment', (req, res) => {
+    const { movieId, userId, username, text } = req.body;
+    if (!movieId || !userId || !username || !text) return res.status(400).send('Missing fields');
+
+    const interactions = readInteractions();
+    if (!interactions[movieId]) {
+        interactions[movieId] = { likes: [], dislikes: [], comments: [] };
+    }
+
+    const newComment = { userId, username, text, date: new Date().toISOString() };
+    interactions[movieId].comments.push(newComment);
+
+    writeInteractions(interactions);
+    res.status(201).json(interactions[movieId]);
+});
+
 
 app.listen(4000, () => console.log('Proxy corriendo en http://localhost:4000'));
