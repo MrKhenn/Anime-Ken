@@ -20,7 +20,7 @@ const LayoutHeader: React.FC<LayoutHeaderProps> = ({ onSearch = () => {} }) => {
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <Link to="/" className="text-2xl font-bold text-red-600">
-            LOGO
+            KenMovie
           </Link>
           <nav className="hidden md:flex space-x-4">
             <Link to="/" className="text-md font-semibold hover:text-red-600 transition-colors">Inicio</Link>
