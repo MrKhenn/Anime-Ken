@@ -15,7 +15,7 @@ const Header = () => {
     };
 
     return (
-        <nav className="fixed top-0 w-full bg-black bg-opacity-75 text-white p-4 z-50">
+        <nav className="fixed top-0 w-full bg-black text-white p-2 z-50">
             <div className="container mx-auto flex items-center justify-between">
                 <div className="flex items-center space-x-8">
                     <Link to="/" className="text-netflix-red font-bold text-2xl">ANIME-KEN</Link>
