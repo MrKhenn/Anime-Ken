@@ -1,6 +1,8 @@
-🎬 Proyecto Web de Películas - Descripción General
+*🎬 Proyecto Web de Películas - Descripción General*
+
 ✨ Funcionalidades Principales
 🧭 Navegación de Contenido
+
 Página de Inicio: Incluye un carrusel dinámico con películas populares y una cuadrícula destacada con selecciones recomendadas.
 
 Películas y Series: Secciones dedicadas para explorar títulos por categoría (películas o series).
