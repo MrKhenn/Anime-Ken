@@ -4,7 +4,7 @@ interface LayoutFooterProps {
   copyrightText?: string;
 }
 
-const LayoutFooter: React.FC<LayoutFooterProps> = ({ copyrightText = 'CineSangre © 2023. Todos los derechos reservados.' }) => {
+const LayoutFooter: React.FC<LayoutFooterProps> = ({ copyrightText = 'KenMovie © 2025. Todos los derechos reservados.' }) => {
   return (
     <footer className="bg-black text-gray-400 py-6 border-t border-red-800 shadow-inner">
       <div className="container mx-auto text-center text-sm">
