@@ -46,3 +46,9 @@ TMDb (The Movie Database)
 OMDb (Open Movie Database)
 
 Streamtape (para reproducción de video)
+
+🛠️ ¿Como Ejecutarlo?:
+
+para ejecutarlo descargamos el .zip del repositorio y lo extraemos luego lo importamos a nuestro editor de codigo
+importamos tanto el front como el backend que viene dentro de la carpeta raiz del proyecto, una vez importado descargamos las dependencias tanto del 
+backend como del front y iniciamos los dos con el comando npm start, *recuerda para que funcione debe iniciar el servidor backend* 
